@@ -67,7 +67,8 @@ class DemoAgent(Agent):
         if not (use_html or use_axtree):
             raise ValueError(f"Either use_html or use_axtree must be set to True.")
 
-        self.openai_client = openai.OpenAI()
+        # openai.base_url = "https://api.shubiaobiao.cn/v1/"
+        self.openai_client = openai.OpenAI(base_url = "https://api.shubiaobiao.cn/v1/")
 
         self.action_set = HighLevelActionSet(
             subsets=["chat", "tab", "nav", "bid", "infeas"],  # define a subset of the action space
