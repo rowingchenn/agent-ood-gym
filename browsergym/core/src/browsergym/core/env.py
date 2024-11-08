@@ -435,7 +435,7 @@ document.addEventListener("visibilitychange", () => {
         terminated = done or (
             self.terminate_on_infeasible and self.infeasible_message_received
         )  # task or agent can terminate the episode
-        truncated = False
+        truncated = False # setting truncated is totally useless
 
         return obs, reward, terminated, truncated, info
 

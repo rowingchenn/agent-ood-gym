@@ -226,7 +226,7 @@ class ExpArgs:
             )
             logger.debug(f"Environment reset.")
 
-            while not step_info.is_done:  # set a limit
+            while not step_info.is_done:  # when truncated or terminated, the episode is done
                 logger.debug(f"Starting step {step_info.step}.")
                 action = step_info.from_action(agent)
                 logger.debug(f"Agent chose action:\n {action}")

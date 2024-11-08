@@ -34,7 +34,7 @@ class GenericWebArenaTask(AbstractBrowserTask):
         # task properties, will be used to set up the browsergym environment
         self.viewport = {"width": 1280, "height": 720}
         self.slow_mo = 1000  # ms
-        self.timeout = 10000  # ms
+        self.timeout = 30000  # ms
 
         self.webarena_instance = WebArenaInstance()
         self.config_file: str = None
@@ -155,7 +155,29 @@ If you believe the task is impossible to complete, provide the answer "N/A".
     def validate(
         self, page: playwright.sync_api.Page, chat_messages: list[str]
     ) -> Tuple[float, bool, str, dict]:
+        """
+        Validates the user session by checking open page URLs, determining the last action type,
+        and evaluating the session score within the WebArena environment.
 
+        This function first checks if all open pages are authorized URLs. Then, it determines the
+        last action based on the latest assistant or infeasible message in `chat_messages`.
+        Finally, it evaluates the session using a predefined evaluator to calculate a score.
+
+        Args:
+            page (playwright.sync_api.Page): The current Playwright page context.
+            chat_messages (list[str]): List of chat messages exchanged in the session.
+
+        Returns:
+            Tuple[float, bool, str, dict]: A tuple containing:
+                - float: The calculated score from the evaluator.
+                - bool: Whether the validation was successful.
+                - str: A message for additional information (empty if successful).
+                - dict: Additional error info if applicable.
+
+        Raises:
+            None: Errors are handled within the function and will not propagate.
+
+        """
         # safeguard: check that all open tabs are either blank or within the list of WebArena URLs
         authorized_locations = ["newtab", ""] + [
             urllib.parse.urlparse(url).netloc
