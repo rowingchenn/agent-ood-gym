@@ -150,6 +150,8 @@ class ExpArgs:
     depends_on: tuple[str] = ()
     save_screenshot: bool = True
     save_som: bool = False
+    ood_steps: list[int] = []  # steps at which to insert OOD observation.
+    ood_type: str = "random"  # type of OOD observation to insert. TODO: implement other types
 
     def make_id(self):
         """Create a unique id for the experiment."""
@@ -224,35 +226,63 @@ class ExpArgs:
             step_info.from_reset(
                 env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
             )
-            logger.debug(f"Environment reset.")
+            logger.debug(f"Environment reset, first observation received and first step created.")
 
-            while not step_info.is_done:  # when truncated or terminated, the episode is done
-                logger.debug(f"Starting step {step_info.step}.")
-                action = step_info.from_action(agent)
-                logger.debug(f"Agent chose action:\n {action}")
+            ood_step_info = StepInfo(step=-1)
+            ood_step_info.from_reset_ood(
+                env, obs_preprocessor=agent.obs_preprocessor, ood_type=self.ood_type
+            )
+            logger.debug("OOD environment reset, OOD observation received and OOD step created.")    
+            self.ood_steps.sort() # sort the OOD steps in ascending order
+            
+            while not step_info.is_done:  # when truncated or terminated, the episode is done            
+                if self.ood_steps[0] == step_info.step: # simulate OOD observation step
 
-                if action is None:
-                    # will end the episode after saving the step info.
-                    step_info.truncated = True
+                    logger.debug(f"Starting OOD step {step_info.step}.")
+                    ood_action = ood_step_info.from_action_ood(agent)
+                    logger.debug(f"Agent chose action on OOD observation:\n {ood_action}")
+                    
+                    # TODO
+                    if ood_action is None:                       
+                        pass
 
-                step_info.save_step_info(
-                    self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
-                )
-                logger.debug(f"Step info saved.")
+                    ood_step_info.save_step_info_ood(
+                        self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
+                    )
+                    logger.debug(f"OOD step info saved.")
 
-                _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
-                logger.debug(f"Chat info sent.")
+                    ood_step_info.from_step_ood(
+                        env, obs_preprocessor=agent.obs_preprocessor, ood_type=self.ood_type
+                    )
 
-                if action is None:
-                    logger.debug(f"Agent returned None action. Ending episode.")
-                    break
+                    self.ood_steps.pop(0)  
+                else: # normal step
+                    logger.debug(f"Starting step {step_info.step}.")
+                    action = step_info.from_action(agent)
+                    logger.debug(f"Agent chose action:\n {action}")
 
-                step_info = StepInfo(step=step_info.step + 1)
-                episode_info.append(step_info)
+                    if action is None:
+                        # will end the episode after saving the step info.
+                        step_info.truncated = True
 
-                logger.debug(f"Sending action to environment.")
-                step_info.from_step(env, action, obs_preprocessor=agent.obs_preprocessor)
-                logger.debug(f"Environment stepped.")
+                    step_info.save_step_info(
+                        self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
+                    )
+                    logger.debug(f"Step info saved.")
+
+                    _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
+                    logger.debug(f"Chat info sent.")
+
+                    if action is None:
+                        logger.debug(f"Agent returned None action. Ending episode.")
+                        break
+
+                    step_info = StepInfo(step=step_info.step + 1)
+                    episode_info.append(step_info)
+
+                    logger.debug(f"Sending action to environment.")
+                    step_info.from_step(env, action, obs_preprocessor=agent.obs_preprocessor)
+                    logger.debug(f"Environment stepped.")
 
         except Exception as e:
             err_msg = f"Exception uncaught by agent or environment in task {self.env_args.task_name}.\n{type(e).__name__}:\n{e}"
@@ -400,6 +430,10 @@ class StepInfo:
         if obs_preprocessor:
             self.obs = obs_preprocessor(self.obs)
 
+    # TODO
+    def from_step_ood(self, env: gym.Env, obs_preprocessor: callable, ood_type: str):
+        self.obs, self.reward, self.terminated, self.truncated, env_info = env.step_ood(ood_type)
+
     def from_action(self, agent: Agent):
         self.profiling.agent_start = time.time()
         self.action, self.agent_info = agent.get_action(self.obs.copy())
@@ -409,16 +443,34 @@ class StepInfo:
 
         return self.action
 
+    # TODO
+    def from_action_ood(self, agent: Agent):
+        self.profiling.agent_start = time.time()
+        self.action, self.agent_info = agent.get_action_ood(self.obs.copy())
+        self.profiling.agent_stop = time.time()
+        
+        # do we need this?
+        self.make_stats()
+
+        return self.action
+
     def from_reset(self, env: gym.Env, seed: int, obs_preprocessor: callable):
         t = self.profiling
         t.env_start = time.time()
         self.obs, env_info = env.reset(seed=seed)
-        self.reward, self.terminated, self.truncated = 0, False, False
         t.env_stop = time.time()
 
         t.action_exec_start = env_info.get("recording_start_time", t.env_start)
         t.action_exect_after_timeout = t.env_stop
         t.action_exec_stop = t.env_stop
+
+        if obs_preprocessor:
+            self.obs = obs_preprocessor(self.obs)
+
+    # TODO: implement
+    # ignore self.profiling for now since I don't know how it could be used or related to OOD
+    def from_reset_ood(self, env: gym.Env, seed: int, obs_preprocessor: callable, ood_type: str):
+        self.obs, env_info = env.reset_ood(ood_type=ood_type)
 
         if obs_preprocessor:
             self.obs = obs_preprocessor(self.obs)
@@ -449,6 +501,46 @@ class StepInfo:
     def save_step_info(self, exp_dir, save_json=False, save_screenshot=True, save_som=False):
 
         # special treatment for some of the observation fields
+        if self.obs is not None:
+            # save screenshots to separate files
+            screenshot = self.obs.pop("screenshot", None)
+            screenshot_som = self.obs.pop("screenshot_som", None)
+
+            if save_screenshot and screenshot is not None:
+                img = Image.fromarray(screenshot)
+                img.save(exp_dir / f"screenshot_step_{self.step}.png")
+
+            if save_som and screenshot_som is not None:
+                img = Image.fromarray(screenshot_som)
+                img.save(exp_dir / f"screenshot_som_step_{self.step}.png")
+
+            # save goal object (which might contain images) to a separate file to save space
+            if self.obs.get("goal_object", False):
+                # save the goal object only once (goal should never change once setup)
+                goal_object_file = Path(exp_dir) / "goal_object.pkl.gz"
+                if not goal_object_file.exists():
+                    with gzip.open(goal_object_file, "wb") as f:
+                        pickle.dump(self.obs["goal_object"], f)
+                # set goal_object to a special placeholder value, which indicates it should be loaded from a separate file
+                self.obs["goal_object"] = None
+
+        with gzip.open(exp_dir / f"step_{self.step}.pkl.gz", "wb") as f:
+            pickle.dump(self, f)
+
+        if save_json:
+            with open(exp_dir / "steps_info.json", "w") as f:
+                json.dump(self, f, indent=4, cls=DataclassJSONEncoder)
+
+        if self.obs is not None:
+            # add the screenshots back to the obs
+            # why do we need this?
+            if screenshot is not None:
+                self.obs["screenshot"] = screenshot
+            if screenshot_som is not None:
+                self.obs["screenshot_som"] = screenshot_som
+
+    # TODO
+    def save_step_info_ood(self, exp_dir, save_json=False, save_screenshot=True, save_som=False):
         if self.obs is not None:
             # save screenshots to separate files
             screenshot = self.obs.pop("screenshot", None)

@@ -77,7 +77,9 @@ class GenericWebArenaTask(AbstractBrowserTask):
                 )
 
         elif task_id is not None:
-            task_configs = [conf for conf in all_configs if conf["task_id"] == task_id]
+            task_configs = [
+                conf for conf in all_configs if conf["task_id"] == task_id
+            ]  # don't understand this line. could one task_id have multiple configs?
             if not task_configs:
                 raise ValueError(
                     f"Could not find any task config with task_id={intent_template_id}."
@@ -223,3 +225,13 @@ If you believe the task is impossible to complete, provide the answer "N/A".
             return score, True, "", {}
         else:
             return score, False, "", {}
+
+    # TODO: implement the
+    def validate_ood(
+        self, chat_messages: list[str], ood_type: str
+    ) -> Tuple[float, bool, str, dict]:
+        """
+        Validate the OOD input was handled correctly
+
+        """
+        raise NotImplementedError

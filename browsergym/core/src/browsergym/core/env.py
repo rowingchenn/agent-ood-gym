@@ -24,6 +24,10 @@ from .observation import (
     extract_focused_element_bid,
     extract_merged_axtree,
     extract_screenshot,
+    get_ood_dom,
+    get_ood_axtree,
+    get_ood_focused_element_bid,
+    get_ood_dom_extra_properties,
 )
 from .spaces import AnyBox, AnyDict, Unicode
 from .task import AbstractBrowserTask
@@ -360,6 +364,13 @@ document.addEventListener("visibilitychange", () => {
 
         return obs, info
 
+    # TODO: implement the OOD reset method
+    def reset_ood(self, ood_type: str):
+        obs = self._get_obs_ood(ood_type)
+        info = {}
+        info["ood_info"] = 1 # TODO
+        return obs, info
+    
     def step(self, action: str) -> tuple:
 
         self.last_action = action
@@ -439,6 +450,10 @@ document.addEventListener("visibilitychange", () => {
 
         return obs, reward, terminated, truncated, info
 
+    # TODO: implement the OOD step method
+    def step_ood(self, ood_type: str) -> tuple:
+        info = {}
+        
     def _task_validate(self):
         # back-up these in case validate() navigates pages and messes the history
         prev_active_page = self.page
@@ -456,6 +471,10 @@ document.addEventListener("visibilitychange", () => {
 
         return reward, done, user_message, info
 
+    # TODO: implement the OOD task validate method
+    def _ood_validate(self):
+        reward, done, user_message, info = self.task.validate_ood(self.page, self.chat.messages)
+    
     def _wait_for_user_message(self):
         # if last message is from the assistant, wait for a user message to continue
         # TODO: be smarter about when to wait for a user message (different action from the assistant?)
@@ -569,4 +588,33 @@ document.addEventListener("visibilitychange", () => {
             "elapsed_time": np.asarray([time.time() - self.start_time]),
         }
 
+        return obs
+    
+    # TODO: implement the OOD get obs method
+    def _get_obs_ood(self, ood_type: str):
+        dom = get_ood_dom(ood_type)
+        axtree = get_ood_axtree(ood_type)
+        focused_element_bid = get_ood_focused_element_bid(ood_type)
+        extra_properties = get_ood_dom_extra_properties(ood_type)
+        
+        # how should we design properties like open_pages_urls, open_pages_titles, and so on?
+        # should we have a separate method for OOD tasks? or should we just return the same properties in the original track?
+        obs = {
+            "chat_messages": copy.deepcopy(self.chat.messages),
+            "goal": _try_to_extract_legacy_goal(self.goal_object),  # legacy goal, deprecated
+            "goal_object": self.goal_object,  # new goal format, list of messages openai style
+            "open_pages_urls": [page.url for page in self.context.pages],
+            "open_pages_titles": [page.title() for page in self.context.pages],
+            "active_page_index": np.asarray([self.context.pages.index(self.page)]),
+            "url": self.page.url,  # redundant with "open_pages_urls" and "active_page_index"
+            "screenshot": extract_screenshot(self.page),
+            "dom_object": dom,
+            "axtree_object": axtree,
+            "extra_element_properties": extra_properties,
+            "focused_element_bid": focused_element_bid,
+            "last_action": self.last_action,
+            "last_action_error": self.last_action_error,
+            "elapsed_time": np.asarray([time.time() - self.start_time]),
+        }
+        
         return obs

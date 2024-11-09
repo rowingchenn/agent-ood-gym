@@ -66,7 +66,7 @@ class AbstractBrowserTask(ABC):
             info: dictionnary, custom information from the task.
 
         """
-
+    
     def cheat(self, page: playwright.sync_api.Page, chat_messages: list[str]) -> None:
         """
         Solve the task using a pre-defined solution (optional).

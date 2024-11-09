@@ -562,3 +562,13 @@ def extract_focused_element_bid(page: playwright.sync_api.Page):
             frame = None
 
     return focused_bid
+
+# TODO: implement the following functions
+def get_ood_dom():
+    pass
+def get_ood_axtree():
+    pass
+def get_ood_focused_element_bid():
+    pass
+def get_ood_dom_extra_properties():
+    pass
