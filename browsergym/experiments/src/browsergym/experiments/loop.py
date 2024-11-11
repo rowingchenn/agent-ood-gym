@@ -150,7 +150,7 @@ class ExpArgs:
     depends_on: tuple[str] = ()
     save_screenshot: bool = True
     save_som: bool = False
-    ood_steps: list[int] = []  # steps at which to insert OOD observation.
+    ood_steps: list[int] = field(default_factory=list)  # steps at which to insert OOD observation.
     ood_type: str = "random"  # type of OOD observation to insert. TODO: implement other types
 
     def make_id(self):
@@ -232,18 +232,18 @@ class ExpArgs:
             ood_step_info.from_reset_ood(
                 env, obs_preprocessor=agent.obs_preprocessor, ood_type=self.ood_type
             )
-            logger.debug("OOD environment reset, OOD observation received and OOD step created.")    
-            self.ood_steps.sort() # sort the OOD steps in ascending order
-            
-            while not step_info.is_done:  # when truncated or terminated, the episode is done            
-                if self.ood_steps[0] == step_info.step: # simulate OOD observation step
+            logger.debug("OOD environment reset, OOD observation received and OOD step created.")
+            self.ood_steps.sort()  # sort the OOD steps in ascending order
+
+            while not step_info.is_done:  # when truncated or terminated, the episode is done
+                if self.ood_steps[0] == step_info.step:  # simulate OOD observation step
 
                     logger.debug(f"Starting OOD step {step_info.step}.")
                     ood_action = ood_step_info.from_action_ood(agent)
                     logger.debug(f"Agent chose action on OOD observation:\n {ood_action}")
-                    
+
                     # TODO
-                    if ood_action is None:                       
+                    if ood_action is None:
                         pass
 
                     ood_step_info.save_step_info_ood(
@@ -255,8 +255,8 @@ class ExpArgs:
                         env, obs_preprocessor=agent.obs_preprocessor, ood_type=self.ood_type
                     )
 
-                    self.ood_steps.pop(0)  
-                else: # normal step
+                    self.ood_steps.pop(0)
+                else:  # normal step
                     logger.debug(f"Starting step {step_info.step}.")
                     action = step_info.from_action(agent)
                     logger.debug(f"Agent chose action:\n {action}")
@@ -448,7 +448,7 @@ class StepInfo:
         self.profiling.agent_start = time.time()
         self.action, self.agent_info = agent.get_action_ood(self.obs.copy())
         self.profiling.agent_stop = time.time()
-        
+
         # do we need this?
         self.make_stats()
 
@@ -469,9 +469,16 @@ class StepInfo:
 
     # TODO: implement
     # ignore self.profiling for now since I don't know how it could be used or related to OOD
-    def from_reset_ood(self, env: gym.Env, seed: int, obs_preprocessor: callable, ood_type: str):
-        self.obs, env_info = env.reset_ood(ood_type=ood_type)
-
+    def from_reset_ood(self, env: gym.Env, seed: int, obs_preprocessor: callable, ood_steps: list[int], ood_type: str):
+        t = self.profiling
+        t.env_start = time.time()
+        self.obs, env_info = env.reset_ood(ood_steps=ood_steps, ood_type=ood_type)
+        t.env_stop = time.time()
+        
+        # no idea what this is for, but keeping it for now
+        t.action_exec_start = env_info.get("recording_start_time", t.env_start)
+        t.action_exect_after_timeout = t.env_stop
+        t.action_exec_stop = t.env_stop
         if obs_preprocessor:
             self.obs = obs_preprocessor(self.obs)
 

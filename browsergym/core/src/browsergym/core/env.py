@@ -368,7 +368,7 @@ document.addEventListener("visibilitychange", () => {
     def reset_ood(self, ood_type: str):
         obs = self._get_obs_ood(ood_type)
         info = {}
-        info["ood_info"] = 1 # TODO
+        info["ood_type"] = 1 # TODO
         return obs, info
     
     def step(self, action: str) -> tuple:
