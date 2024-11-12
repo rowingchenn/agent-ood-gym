@@ -3,16 +3,10 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools"]
 
 [project]
-name = "browsergym"
-description = "BrowserGym: a gym environment for web task automation in the Chromium browser"
+name = "agent-ood-gym"
+description = "agent-ood-gym: Compositive gym environments for out-of-distribution detection for LLM agents based on BrowserGym"
 authors = [
-    {name = "Rim Assouel"},
-    {name = "Léo Boisvert"},
-    {name = "Massimo Caccia"},
-    {name = "Alex Drouin"},
-    {name = "Maxime Gasse"},
-    {name = "Alex Lacoste"},
-    {name = "Tom Marty"},
+    {name = "Weichen Zhang"},
 ]
 readme = "README.md"
 requires-python = ">3.7"
@@ -25,14 +19,14 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "License :: OSI Approved :: Apache Software License",
 ]
-version="0.13.0"
+version="0.1.0"
 dependencies = [
-    "browsergym-core==0.13.0",
-    "browsergym-miniwob==0.13.0",
-    "browsergym-webarena==0.13.0",
-    "browsergym-visualwebarena==0.13.0",
-    "browsergym-assistantbench==0.13.0",
-    "browsergym-experiments==0.13.0",
+    "browsergym-core==0.1.0",
+    "browsergym-miniwob==0.1.0",
+    "browsergym-webarena==0.1.0",
+    "browsergym-visualwebarena==0.1.0",
+    "browsergym-assistantbench==0.1.0",
+    "browsergym-experiments==0.1.0",
     "browsergym-workarena>=0.4.1",
 ]
 
