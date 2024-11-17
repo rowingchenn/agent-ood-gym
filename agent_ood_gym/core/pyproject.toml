@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-requirements-txt"]
 build-backend = "hatchling.build"
 
 [project]
-name = "agentoodgym-core"
+name = "browsergym-core"
 description = "BrowserGym: a gym environment for web task automation in the Chromium browser"
 authors = [
     {name = "Rim Assouel"},
@@ -11,10 +11,10 @@ authors = [
     {name = "Massimo Caccia"},
     {name = "Alex Drouin"},
     {name = "Maxime Gasse"},
-    {name = "Alex Lacoste"},
-    {name = "Tom Marty"},
     {name = "Imene Kerboua"},
-    {name = "Weichen Zhang"},
+    {name = "Alex Lacoste"},
+    {name = "Thibault Le Sellier De Chezelles"},
+    {name = "Tom Marty"},
 ]
 readme = "README.md"
 requires-python = ">3.9"

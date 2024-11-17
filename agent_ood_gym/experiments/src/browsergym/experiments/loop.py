@@ -1,3 +1,4 @@
+import copy
 import gzip
 import importlib.metadata
 import json
@@ -23,6 +24,7 @@ from PIL import Image
 from tqdm import tqdm
 
 from browsergym.core.chat import Chat
+from browsergym.core.action.parsers import highlevel_action_parser
 
 from .agent import Agent
 from .utils import count_messages_token, count_tokens
@@ -45,7 +47,15 @@ class EnvArgs(DataClassJsonMixin):
     storage_state: Optional[str | Path | dict] = None
     task_kwargs: Optional[dict] = None  # use default value from BrowserGym
 
-    def make_env(self, action_mapping, exp_dir):
+    def make_env(self, action_mapping, exp_dir, exp_task_kwargs: dict = {}):
+        """
+        Instantiates the BrowserGym environment corresponding to the arguments (with some tweaks).
+
+        Args:
+            action_mapping: overrides the action mapping of the environment.
+            exp_dir: will set some environment parameters (e.g., record_video_dir) with respect to the directory where the experiment is running.
+            exp_task_kwargs: use with caution! Will override task parameters to experiment-specific values. Useful to set different server configs for different experiments, or output file paths within the experiment's folder (e.g., assistantbench).
+        """
         extra_kwargs = {}
         if self.record_video:
             extra_kwargs["record_video_dir"] = exp_dir
@@ -57,6 +67,15 @@ class EnvArgs(DataClassJsonMixin):
             extra_kwargs["pw_context_kwargs"] = {"storage_state": self.storage_state}
         if self.task_kwargs is not None:
             extra_kwargs["task_kwargs"] = self.task_kwargs
+        if exp_task_kwargs:
+            extra_kwargs["task_kwargs"] = extra_kwargs.get("task_kwargs", {}) | exp_task_kwargs
+
+        # assistantbench hack, write the task output (agent prediction) to a file in the experiment's directory
+        # TODO: find a better way to deal with this
+        if self.task_name.startswith("assistantbench.test"):
+            extra_kwargs["task_kwargs"] = extra_kwargs.get("task_kwargs", {}) | {
+                "output_file": exp_dir / "assistantbench-prediction.json"
+            }
 
         return gym.make(
             _get_env_name(self.task_name),
@@ -216,9 +235,12 @@ class ExpArgs:
             logger.info(f"Running experiment {self.exp_name} in:\n  {self.exp_dir}")
             agent = self.agent_args.make_agent()
             logger.debug(f"Agent created.")
+
             env = self.env_args.make_env(
-                action_mapping=agent.action_set.to_python_code, exp_dir=self.exp_dir
+                action_mapping=agent.action_set.to_python_code,
+                exp_dir=self.exp_dir,
             )
+
             logger.debug(f"Environment created.")
 
             step_info = StepInfo(step=0)
@@ -755,6 +777,87 @@ class ExpResult:
                     raise FileNotFoundError(f"summary_info.json is empty.")
                 self._summary_info = json.load(f)
         return self._summary_info
+
+    @property
+    def tape(self) -> dict:
+        """
+        TapeAgents (https://github.com/ServiceNow/TapeAgents) framework compatibility.
+        Exports experiment trace in the format of serialized tape.
+        Reuses tape segments if they were already placed in the agent_info during the experiment.
+
+        :returns: dict: serialized tape of the experiment
+        """
+        steps = []
+        for step_info in self.steps_info:
+            if "tape_segment" in step_info.agent_info["extra_info"]:
+                tape_segment = step_info.agent_info["extra_info"]["tape_segment"]
+            else:
+                tape_segment = self._create_tape_segment(step_info)
+            steps += tape_segment
+        metadata = dict(
+            id=str(uuid.uuid4()),
+            author=f"browsergym_agent_[{self.exp_args.agent_args.agent_name}]",
+            result=self.get_exp_record(),
+        )
+        return dict(steps=steps, metadata=metadata)
+
+    def _create_tape_segment(self, step_info: StepInfo) -> list[dict]:
+        tape_segment = []
+        # extract observation step
+        if step_info.obs is not None:
+            screenshot: str = ""
+            screenshot_som: str = ""
+            obs_dict = copy.deepcopy(step_info.obs)
+            if "screenshot" in obs_dict:
+                screenshot = str(self.exp_dir / f"screenshot_step_{step_info.step}.png")
+                obs_dict.pop("screenshot")
+            if "screenshot_som" in obs_dict:
+                screenshot_som = str(self.exp_dir / f"screenshot_som_step_{step_info.step}.png")
+                obs_dict.pop("screenshot_som")
+            tape_segment.append(
+                dict(
+                    kind="browsergym_observation",
+                    metadata=dict(step=step_info.step),
+                    obs=obs_dict,
+                    screenshot=screenshot,
+                    screenshot_som=screenshot_som,
+                )
+            )
+
+        # extract thought step
+        think = step_info.agent_info.get("think", "")
+        if think:
+            tape_segment.append(
+                dict(kind="browsergym_thought", metadata={"step": step_info.step}, text=think)
+            )
+
+        # extract action steps
+        function_calls = highlevel_action_parser.parse_string(step_info.action, parse_all=True)
+        for name, arguments in function_calls:
+            tape_segment.append(
+                dict(
+                    kind="browsergym_action",
+                    metadata=dict(
+                        step=step_info.step,
+                        reward=step_info.reward,
+                        raw_reward=step_info.raw_reward,
+                        terminated=step_info.terminated,
+                        truncated=step_info.truncated,
+                        agent_info=step_info.agent_info,
+                        stats=step_info.stats,
+                        task_info=step_info.task_info,
+                    ),
+                    name=name,
+                    arguments=arguments,
+                )
+            )
+        return tape_segment
+
+    def save_tape(self, filename: str = "tape.json"):
+        if os.path.exists(self.exp_dir / filename):
+            raise FileExistsError(f"{filename} already exists in {self.exp_dir}")
+        with open(self.exp_dir / filename, "w") as f:
+            json.dump(self.tape, f, indent=4, ensure_ascii=False)
 
     def get_screenshot(self, step: int, som=False) -> Image:
         key = (step, som)
