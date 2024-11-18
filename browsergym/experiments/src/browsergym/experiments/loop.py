@@ -15,7 +15,7 @@ from collections import defaultdict
 from dataclasses import asdict, dataclass, field, is_dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict
 
 import gymnasium as gym
 import numpy as np
@@ -86,7 +86,43 @@ class EnvArgs(DataClassJsonMixin):
             action_mapping=action_mapping,  # action mapping is provided by the agent
             **extra_kwargs,
         )
+        
+    def make_ood_env(self, action_mapping, exp_dir, exp_task_kwargs: dict = {}, ood_args: dict = {}):
+        """
+        Instantiates the BrowserGym environment corresponding to the arguments (with some tweaks).
 
+        Args:
+            action_mapping: overrides the action mapping of the environment.
+            exp_dir: will set some environment parameters (e.g., record_video_dir) with respect to the directory where the experiment is running.
+            exp_task_kwargs: use with caution! Will override task parameters to experiment-specific values. Useful to set different server configs for different experiments, or output file paths within the experiment's folder (e.g., assistantbench).
+            ood_args: dictionary containing the OOD task type, OOD task ID, and OOD insert steps.
+        """
+        import browsergym.oodarena
+        
+        ood_env_name = f"oodarena.{ood_args["ood_task_type"]}.{ood_args["ood_task_id"]}"
+        extra_kwargs = {}
+        if self.record_video:
+            extra_kwargs["record_video_dir"] = exp_dir
+        if self.viewport:
+            extra_kwargs["viewport"] = self.viewport
+        if self.slow_mo is not None:
+            extra_kwargs["slow_mo"] = self.slow_mo
+        if self.storage_state:
+            extra_kwargs["pw_context_kwargs"] = {"storage_state": self.storage_state}
+        if self.task_kwargs is not None:
+            extra_kwargs["task_kwargs"] = self.task_kwargs
+        if exp_task_kwargs:
+            extra_kwargs["task_kwargs"] = extra_kwargs.get("task_kwargs", {}) | exp_task_kwargs
+
+        return gym.make(
+            ood_env_name,
+            disable_env_checker=True,
+            max_episode_steps=self.max_steps,
+            headless=self.headless,
+            wait_for_user_message=self.wait_for_user_message,
+            action_mapping=action_mapping,  # action mapping is provided by the agent
+            **extra_kwargs,
+        )
 
 @dataclass
 class AbstractAgentArgs(ABC):
@@ -169,8 +205,7 @@ class ExpArgs:
     depends_on: tuple[str] = ()
     save_screenshot: bool = True
     save_som: bool = False
-    ood_steps: list[int] = field(default_factory=list)  # steps at which to insert OOD observation.
-    ood_type: str = "random"  # type of OOD observation to insert. TODO: implement other types
+    ood_args: Dict[str, any] = None
 
     def make_id(self):
         """Create a unique id for the experiment."""
@@ -187,7 +222,7 @@ class ExpArgs:
 
         if self.exp_name is None:
             task_name = self.env_args.task_name
-            self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}_{self.env_args.task_seed}"
+            self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args.ood_task_id}"
 
         # if exp_dir exists, it means it's a re-run, move the old one
         if self.exp_dir is not None:
@@ -231,6 +266,7 @@ class ExpArgs:
 
         episode_info = []
         env, step_info, err_msg, stack_trace = None, None, None, None
+        ood_env, ood_step_info = None, None
         try:
             logger.info(f"Running experiment {self.exp_name} in:\n  {self.exp_dir}")
             agent = self.agent_args.make_agent()
@@ -242,6 +278,15 @@ class ExpArgs:
             )
 
             logger.debug(f"Environment created.")
+            
+            # TODO
+            ood_env = self.env_args.make_ood_env(
+                action_mapping=agent.action_set.to_python_code,
+                exp_dir=self.exp_dir,
+                ood_args=self.ood_args
+            )
+            
+            logger.debug(f"OOD Environment created.")
 
             step_info = StepInfo(step=0)
             episode_info = [step_info]
@@ -250,15 +295,16 @@ class ExpArgs:
             )
             logger.debug(f"Environment reset, first observation received and first step created.")
 
+            # TODO
             ood_step_info = StepInfo(step=-1)
             ood_step_info.from_reset_ood(
-                env, obs_preprocessor=agent.obs_preprocessor, ood_type=self.ood_type
+                ood_env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
             )
             logger.debug("OOD environment reset, OOD observation received and OOD step created.")
-            self.ood_steps.sort()  # sort the OOD steps in ascending order
+            self.ood_insert_steps = self.ood_args["ood_insert_steps"].sort()  # sort the OOD steps in ascending order
 
             while not step_info.is_done:  # when truncated or terminated, the episode is done
-                if self.ood_steps[0] == step_info.step:  # simulate OOD observation step
+                if self.ood_insert_steps[0] == step_info.step:  # simulate OOD observation step
 
                     logger.debug(f"Starting OOD step {step_info.step}.")
                     ood_action = ood_step_info.from_action_ood(agent)
@@ -277,7 +323,7 @@ class ExpArgs:
                         env, obs_preprocessor=agent.obs_preprocessor, ood_type=self.ood_type
                     )
 
-                    self.ood_steps.pop(0)
+                    self.ood_insert_steps.pop(0)
                 else:  # normal step
                     logger.debug(f"Starting step {step_info.step}.")
                     action = step_info.from_action(agent)

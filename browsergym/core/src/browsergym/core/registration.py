@@ -3,7 +3,7 @@ from typing import Type
 
 import gymnasium as gym
 
-from .env import BrowserEnv
+from .env import BrowserEnv, BrowserOODEnv
 from .task import AbstractBrowserTask
 
 
@@ -74,3 +74,43 @@ def register_task(
         *args,
         **kwargs,
     )
+    
+def register_ood_task(
+    id: str, # f"oodarena.{ood_task_type}.{ood_task_id}"
+    task_class: Type[AbstractBrowserTask],
+    task_kwargs: dict = {},
+    nondeterministic: bool = True,
+    *args,
+    **kwargs,
+):
+    """
+    Registers a browser ood task as a gym environment with its unique id.
+
+    Args:
+        id: the id of the task to register (will be prepended by "browsergym/").
+        task_class: the task class to register.
+        task_kwargs: frozen task arguments (can not be overloaded at environment creation time).
+        task_kwargs_default: default task arguments (can be overloaded at environment creation time).
+        nondeterministic: whether the task cannot be guaranteed deterministic transitions.
+        *args: additional sequential arguments for either the gym or the browsergym environment.
+        *kwargs: additional keyword arguments for either the gym or the browsergym environment.
+    """
+
+    task_entrypoint = task_class
+
+    # freeze task_kwargs (cannot be overriden at environment creation)
+    task_entrypoint = frozen_partial(task_class, **task_kwargs)
+
+    # pre-set default_task_kwargs (can be overriden at environment creation)
+    task_entrypoint = partial(task_entrypoint, **default_task_kwargs)
+
+    gym.register(
+        id=f"browsergym/{id}",
+        entry_point=lambda *env_args, **env_kwargs: BrowserOODEnv(
+            task_entrypoint, *env_args, **env_kwargs
+        ),
+        nondeterministic=nondeterministic,
+        *args,
+        **kwargs,
+    )
+

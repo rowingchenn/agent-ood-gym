@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling", "hatch-requirements-txt"]
+build-backend = "hatchling.build"
+
+[project]
+name = "browsergym-oodarena"
+description = "OOD detection benchmark for BrowserGym, which environments are browser and Web pages."
+authors = [
+    {Weichen Zhang},
+]
+readme = "README.md"
+requires-python = ">3.7"
+license = {text = "Apache-2.0"}
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: Apache Software License",
+]
+dynamic = ["dependencies", "version"]
+
+[project.urls]
+homepage = ""
+
+[tool.hatch.version]
+path = "src/browsergym/oodarena/__init__.py"
+
+[tool.hatch.metadata.hooks.requirements_txt]
+files = ["requirements.txt"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/browsergym"]
+
+[tool.black]
+line-length = 100
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.nox
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    'ignore::UserWarning:gymnasium.*:',  # too many "The obs is not within the observation space." warnings.
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
