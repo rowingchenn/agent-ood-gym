@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "browsergym-oodarena"
 description = "OOD detection benchmark for BrowserGym, which environments are browser and Web pages."
 authors = [
-    {Weichen Zhang},
+    {name = "Weichen Zhang", email = "rowingchenn@berkeley.edu"}
 ]
 readme = "README.md"
 requires-python = ">3.7"

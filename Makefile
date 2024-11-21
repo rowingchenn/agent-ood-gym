@@ -1,6 +1,6 @@
 install:
 	@echo "--- 🚀 Installing project dependencies ---"-e ./agent_ood_gym/
-	pip install -e ./browsergym/core -e ./browsergym/miniwob -e ./browsergym/webarena -e ./agent_ood_gym/visualwebarena/ -e ./agent_ood_gym/experiments -e ./agent_ood_gym/assistantbench 
+	pip install -e ./browsergym/core -e ./browsergym/miniwob -e ./browsergym/webarena -e ./browsergym/visualwebarena/ -e ./browsergym/experiments -e ./browsergym/assistantbench -e ./browsergym/oodarena
 	playwright install chromium
 
 install-demo:
