@@ -78,7 +78,7 @@ def register_task(
 def register_ood_task(
     id: str, # f"oodarena.{ood_task_type}.{ood_task_id}"
     task_class: Type[AbstractBrowserTask],
-    task_kwargs: dict = {},
+    task_kwargs: dict = {}, # {"ood_task_id": ood_task_id}
     nondeterministic: bool = True,
     *args,
     **kwargs,
@@ -101,9 +101,6 @@ def register_ood_task(
     # freeze task_kwargs (cannot be overriden at environment creation)
     task_entrypoint = frozen_partial(task_class, **task_kwargs)
 
-    # pre-set default_task_kwargs (can be overriden at environment creation)
-    task_entrypoint = partial(task_entrypoint, **default_task_kwargs)
-
     gym.register(
         id=f"browsergym/{id}",
         entry_point=lambda *env_args, **env_kwargs: BrowserOODEnv(
@@ -114,3 +111,49 @@ def register_ood_task(
         **kwargs,
     )
 
+def register_ood_task(
+    id: str,
+    ood_task_class: Type[AbstractBrowserTask],
+    ood_task_kwargs: dict = {},
+    default_task_kwargs: dict = {},
+    nondeterministic: bool = True,
+    *args,
+    **kwargs,
+):
+    """
+    Registers an OOD browser task as a gym environment with its unique id.
+
+    Args:
+        id: the id of the OOD task to register (will be prepended by "browsergym/").
+        ood_task_class: The OOD task class to register.
+        ood_task_kwargs: Frozen task arguments for OOD tasks (cannot be overloaded at environment creation time).
+        default_task_kwargs: Default task arguments for OOD tasks (can be overloaded at environment creation time).
+        nondeterministic: Whether the task cannot be guaranteed deterministic transitions.
+        *args: Additional sequential arguments for either the gym or the browsergym environment.
+        *kwargs: Additional keyword arguments for either the gym or the browsergym environment.
+    """
+    if ood_task_kwargs and default_task_kwargs:
+        # Check overlap between frozen and default task_kwargs
+        clashing_kwargs = set(ood_task_kwargs) & set(default_task_kwargs)
+        if clashing_kwargs:
+            raise ValueError(
+                f"Illegal attempt to register Browsergym environment {id} with both frozen and default values for task parameters {clashing_kwargs}."
+            )
+
+    ood_task_entrypoint = ood_task_class
+
+    # Freeze ood_task_kwargs (cannot be overridden at environment creation)
+    ood_task_entrypoint = frozen_partial(ood_task_class, **ood_task_kwargs)
+
+    # Pre-set default_task_kwargs (can be overridden at environment creation)
+    ood_task_entrypoint = partial(ood_task_entrypoint, **default_task_kwargs)
+
+    gym.register(
+        id=f"browsergym/{id}",
+        entry_point=lambda *env_args, **env_kwargs: BrowserOODEnv(
+            ood_task_entrypoint, *env_args, **env_kwargs
+        ),
+        nondeterministic=nondeterministic,
+        *args,
+        **kwargs,
+    )

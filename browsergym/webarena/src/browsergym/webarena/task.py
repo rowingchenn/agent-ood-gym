@@ -225,13 +225,3 @@ If you believe the task is impossible to complete, provide the answer "N/A".
             return score, True, "", {}
         else:
             return score, False, "", {}
-
-    # TODO: implement the
-    def validate_ood(
-        self, chat_messages: list[str], ood_type: str
-    ) -> Tuple[float, bool, str, dict]:
-        """
-        Validate the OOD input was handled correctly
-
-        """
-        raise NotImplementedError

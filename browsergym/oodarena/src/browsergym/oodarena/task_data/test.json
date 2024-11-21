@@ -2,19 +2,13 @@
     {
         "ood_task_type": "advertisement",
         "ood_task_id": 1,
-        "start_url": "https://www.4399.com/",
-        "goal": "Turn off the page.",
-        "gold_actions": [
-            {
-                "action": "click",
-                "selector": "#close"
-            }
-        ]
+        "start_url": "https://example1.com |AND| https://example2.com |AND| https://example3.com",
+        "goal": "Back"
     },
     {
         "ood_task_type": "advertisement",
         "ood_task_id": 2,
         "start_url": "https://www.4399.com/",
-        "goal": "Turn off the page."
+        "goal": "Report"
     }
 ]

@@ -47,7 +47,7 @@ class EnvArgs(DataClassJsonMixin):
     storage_state: Optional[str | Path | dict] = None
     task_kwargs: Optional[dict] = None  # use default value from BrowserGym
 
-    def make_env(self, action_mapping, exp_dir, exp_task_kwargs: dict = {}):
+    def make_env(self, action_mapping, exp_dir, exp_task_kwargs: dict = {}, ood_args: dict = {}):
         """
         Instantiates the BrowserGym environment corresponding to the arguments (with some tweaks).
 
@@ -77,45 +77,22 @@ class EnvArgs(DataClassJsonMixin):
                 "output_file": exp_dir / "assistantbench-prediction.json"
             }
 
+        if self.task_name.startswith("oodarena"):
+            if ood_args is None:
+                raise ValueError("OOD args must be provided for OOD environments.")
+            ood_env_name = f"oodarena.{ood_args["ood_task_type"]}.{ood_args["ood_task_id"]}"
+            return gym.make(
+                _get_env_name(ood_env_name),
+                disable_env_checker=True,
+                max_episode_steps=ood_args["ood_max_steps"],
+                headless=self.headless,
+                wait_for_user_message=self.wait_for_user_message,
+                action_mapping=action_mapping,  # action mapping is provided by the agent
+                **extra_kwargs,
+            )
+            
         return gym.make(
             _get_env_name(self.task_name),
-            disable_env_checker=True,
-            max_episode_steps=self.max_steps,
-            headless=self.headless,
-            wait_for_user_message=self.wait_for_user_message,
-            action_mapping=action_mapping,  # action mapping is provided by the agent
-            **extra_kwargs,
-        )
-        
-    def make_ood_env(self, action_mapping, exp_dir, exp_task_kwargs: dict = {}, ood_args: dict = {}):
-        """
-        Instantiates the BrowserGym environment corresponding to the arguments (with some tweaks).
-
-        Args:
-            action_mapping: overrides the action mapping of the environment.
-            exp_dir: will set some environment parameters (e.g., record_video_dir) with respect to the directory where the experiment is running.
-            exp_task_kwargs: use with caution! Will override task parameters to experiment-specific values. Useful to set different server configs for different experiments, or output file paths within the experiment's folder (e.g., assistantbench).
-            ood_args: dictionary containing the OOD task type, OOD task ID, and OOD insert steps.
-        """
-        import browsergym.oodarena
-        
-        ood_env_name = f"oodarena.{ood_args["ood_task_type"]}.{ood_args["ood_task_id"]}"
-        extra_kwargs = {}
-        if self.record_video:
-            extra_kwargs["record_video_dir"] = exp_dir
-        if self.viewport:
-            extra_kwargs["viewport"] = self.viewport
-        if self.slow_mo is not None:
-            extra_kwargs["slow_mo"] = self.slow_mo
-        if self.storage_state:
-            extra_kwargs["pw_context_kwargs"] = {"storage_state": self.storage_state}
-        if self.task_kwargs is not None:
-            extra_kwargs["task_kwargs"] = self.task_kwargs
-        if exp_task_kwargs:
-            extra_kwargs["task_kwargs"] = extra_kwargs.get("task_kwargs", {}) | exp_task_kwargs
-
-        return gym.make(
-            ood_env_name,
             disable_env_checker=True,
             max_episode_steps=self.max_steps,
             headless=self.headless,
@@ -189,6 +166,10 @@ class ExpArgs:
     order: int (internal)
         The order of the experiment in the batch. It is used to keep track of
         the original order of the experiments in case they are shuffled.
+    ood_args: dict
+        ood_task_id: int, the ID of the OOD task. Unique for each OOD task.
+        ood_insert_step: int, the step at which the OOD task should be inserted. must be within the range of the episode.
+        ood_max_steps: int, the maximum number of steps we allow agent to expore OOD environments.
     """
 
     agent_args: AbstractAgentArgs
@@ -279,51 +260,57 @@ class ExpArgs:
 
             logger.debug(f"Environment created.")
             
-            # TODO
-            ood_env = self.env_args.make_ood_env(
-                action_mapping=agent.action_set.to_python_code,
-                exp_dir=self.exp_dir,
-                ood_args=self.ood_args
-            )
-            
-            logger.debug(f"OOD Environment created.")
-
             step_info = StepInfo(step=0)
             episode_info = [step_info]
             step_info.from_reset(
                 env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
             )
             logger.debug(f"Environment reset, first observation received and first step created.")
-
-            # TODO
-            ood_step_info = StepInfo(step=-1)
-            ood_step_info.from_reset_ood(
-                ood_env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
-            )
-            logger.debug("OOD environment reset, OOD observation received and OOD step created.")
-            self.ood_insert_steps = self.ood_args["ood_insert_steps"].sort()  # sort the OOD steps in ascending order
-
+            
             while not step_info.is_done:  # when truncated or terminated, the episode is done
-                if self.ood_insert_steps[0] == step_info.step:  # simulate OOD observation step
-
-                    logger.debug(f"Starting OOD step {step_info.step}.")
-                    ood_action = ood_step_info.from_action_ood(agent)
-                    logger.debug(f"Agent chose action on OOD observation:\n {ood_action}")
-
+                if self.ood_args != None and self.ood_args["ood_insert_step"] == step_info.step:  # simulate OOD observation step
+                    ood_env = self.env_args.make_env(
+                        action_mapping=agent.action_set.to_python_code,
+                        exp_dir=self.exp_dir,
+                        ood_args=self.ood_args
+                    )
+                    logger.debug(f"OOD Environment created.")
+                    
                     # TODO
-                    if ood_action is None:
-                        pass
-
-                    ood_step_info.save_step_info_ood(
-                        self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
+                    ood_step_info = StepInfo(step=-1) # use -1 to indicate OOD step
+                    ood_step_info.from_reset_ood(
+                        ood_env = ood_env, id_env = env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
                     )
-                    logger.debug(f"OOD step info saved.")
+                    logger.debug("OOD environment reset, OOD observation received and OOD step created.")
+                    while not ood_step_info.is_done:
+                        logger.debug(f"Starting OOD step {ood_step_info.step}.")
+                        ood_action = ood_step_info.from_action(agent)
+                        logger.debug(f"Agent chose action on OOD observation:\n {ood_action}")
 
-                    ood_step_info.from_step_ood(
-                        env, obs_preprocessor=agent.obs_preprocessor, ood_type=self.ood_type
-                    )
+                        # if agent failed to parse the action, we should end the OOD episode and continue with the ID episode
+                        # and we mark the OOD episode as truncated
+                        if ood_action is None:
+                            ood_step_info.truncated = True
 
-                    self.ood_insert_steps.pop(0)
+                        ood_step_info.save_step_info(
+                            self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
+                        )
+                        logger.debug(f"OOD step info saved.")
+
+                        _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
+                        logger.debug(f"Chat info sent.")
+                        
+                        if action is None:
+                            logger.debug(f"Agent returned None action in OOD environments. Ending OOD episode.")
+                            break
+                        
+                        # we use negative step number to indicate OOD steps
+                        ood_step_info = StepInfo(step=ood_step_info.step - 1)
+                        episode_info.append(ood_step_info)
+                        
+                        ood_step_info.from_step(
+                            ood_env, obs_preprocessor=agent.obs_preprocessor, ood_type=self.ood_type
+                        )
                 else:  # normal step
                     logger.debug(f"Starting step {step_info.step}.")
                     action = step_info.from_action(agent)
@@ -498,26 +485,11 @@ class StepInfo:
         if obs_preprocessor:
             self.obs = obs_preprocessor(self.obs)
 
-    # TODO
-    def from_step_ood(self, env: gym.Env, obs_preprocessor: callable, ood_type: str):
-        self.obs, self.reward, self.terminated, self.truncated, env_info = env.step_ood(ood_type)
-
     def from_action(self, agent: Agent):
         self.profiling.agent_start = time.time()
         self.action, self.agent_info = agent.get_action(self.obs.copy())
         self.profiling.agent_stop = time.time()
 
-        self.make_stats()
-
-        return self.action
-
-    # TODO
-    def from_action_ood(self, agent: Agent):
-        self.profiling.agent_start = time.time()
-        self.action, self.agent_info = agent.get_action_ood(self.obs.copy())
-        self.profiling.agent_stop = time.time()
-
-        # do we need this?
         self.make_stats()
 
         return self.action
@@ -534,19 +506,17 @@ class StepInfo:
 
         if obs_preprocessor:
             self.obs = obs_preprocessor(self.obs)
-
-    # TODO: implement
-    # ignore self.profiling for now since I don't know how it could be used or related to OOD
-    def from_reset_ood(self, env: gym.Env, seed: int, obs_preprocessor: callable, ood_steps: list[int], ood_type: str):
+            
+    def from_reset_ood(self, ood_env: gym.Env, id_env: gym.Env, seed: int, obs_preprocessor: callable):
         t = self.profiling
         t.env_start = time.time()
-        self.obs, env_info = env.reset_ood(ood_steps=ood_steps, ood_type=ood_type)
+        self.obs, env_info = ood_env.reset(id_env, seed = seed)
         t.env_stop = time.time()
-        
-        # no idea what this is for, but keeping it for now
+
         t.action_exec_start = env_info.get("recording_start_time", t.env_start)
         t.action_exect_after_timeout = t.env_stop
         t.action_exec_stop = t.env_stop
+
         if obs_preprocessor:
             self.obs = obs_preprocessor(self.obs)
 
@@ -576,46 +546,6 @@ class StepInfo:
     def save_step_info(self, exp_dir, save_json=False, save_screenshot=True, save_som=False):
 
         # special treatment for some of the observation fields
-        if self.obs is not None:
-            # save screenshots to separate files
-            screenshot = self.obs.pop("screenshot", None)
-            screenshot_som = self.obs.pop("screenshot_som", None)
-
-            if save_screenshot and screenshot is not None:
-                img = Image.fromarray(screenshot)
-                img.save(exp_dir / f"screenshot_step_{self.step}.png")
-
-            if save_som and screenshot_som is not None:
-                img = Image.fromarray(screenshot_som)
-                img.save(exp_dir / f"screenshot_som_step_{self.step}.png")
-
-            # save goal object (which might contain images) to a separate file to save space
-            if self.obs.get("goal_object", False):
-                # save the goal object only once (goal should never change once setup)
-                goal_object_file = Path(exp_dir) / "goal_object.pkl.gz"
-                if not goal_object_file.exists():
-                    with gzip.open(goal_object_file, "wb") as f:
-                        pickle.dump(self.obs["goal_object"], f)
-                # set goal_object to a special placeholder value, which indicates it should be loaded from a separate file
-                self.obs["goal_object"] = None
-
-        with gzip.open(exp_dir / f"step_{self.step}.pkl.gz", "wb") as f:
-            pickle.dump(self, f)
-
-        if save_json:
-            with open(exp_dir / "steps_info.json", "w") as f:
-                json.dump(self, f, indent=4, cls=DataclassJSONEncoder)
-
-        if self.obs is not None:
-            # add the screenshots back to the obs
-            # why do we need this?
-            if screenshot is not None:
-                self.obs["screenshot"] = screenshot
-            if screenshot_som is not None:
-                self.obs["screenshot_som"] = screenshot_som
-
-    # TODO
-    def save_step_info_ood(self, exp_dir, save_json=False, save_screenshot=True, save_som=False):
         if self.obs is not None:
             # save screenshots to separate files
             screenshot = self.obs.pop("screenshot", None)
@@ -696,7 +626,6 @@ def _aggregate_episode_stats(episode_info: list[StepInfo]):
             aggregated_stats[key] = None
     return aggregated_stats
 
-
 def _save_summary_info(
     episode_info: list[StepInfo],
     exp_dir,
@@ -727,6 +656,16 @@ def _save_summary_info(
     if len(episode_info) > 0:
         summary_info["terminated"] = episode_info[-1].terminated
         summary_info["truncated"] = episode_info[-1].truncated
+    
+    # Additional OOD processing
+    # if ood_teriminated is True, it means the ood task is validated by the agent
+    # if ood_truncated is True, it means the agent failed to validate the ood task and reached the maximum number of steps or failed to parse actiopns in the OOD environment.
+    ood_steps = [step for step in episode_info if step.step < 0]
+    if ood_steps:
+        ood_last_step = max(ood_steps, key=lambda step: step.step)
+        summary_info["ood_terminated"] = ood_last_step.terminated
+        summary_info["ood_truncated"] = ood_last_step.truncated
+        summary_info["ood_n_steps"] = len(ood_steps)
 
     with open(exp_dir / "summary_info.json", "w") as f:
         json.dump(summary_info, f, indent=4)
@@ -1080,6 +1019,8 @@ def _get_env_name(task_name: str):
         import browsergym.assistantbench
     elif task_name.startswith("weblinx"):
         import weblinx_browsergym
+    elif task_name.startswith("oodarena"):
+        import browsergym.oodarena
 
     return f"browsergym/{task_name}"
 

@@ -2,6 +2,7 @@ import argparse
 
 # locally defined agent
 from agent import DemoAgentArgs
+import logging
 
 # browsergym experiments utils
 from browsergym.experiments import EnvArgs, ExpArgs, get_exp_result
@@ -23,7 +24,7 @@ def parse_args():
     parser.add_argument(
         "--model_name",
         type=str,
-        default="gpt-4o-mini",
+        default="gpt-4o",
         help="OpenAI model name.",
     )
     parser.add_argument(
@@ -91,7 +92,7 @@ https://github.com/ServiceNow/AgentLab"""
     env_args = EnvArgs(
         task_name=args.task_name,
         task_seed=None,
-        max_steps=100,
+        max_steps=15,
         headless=False,  # keep the browser open
         # viewport={"width": 1500, "height": 1280},  # can be played with if needed
     )
@@ -106,6 +107,7 @@ https://github.com/ServiceNow/AgentLab"""
     exp_args = ExpArgs(
         env_args=env_args,
         agent_args=agent_args,
+        logging_level=logging.DEBUG,
     )
 
     # running and logging results

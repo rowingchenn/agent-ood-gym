@@ -20,16 +20,9 @@ class BrowserOODArenaTask(AbstractBrowserTask):
         self,
         seed: int,
         task_id: Optional[int] = None,
-        intent_template_id: Optional[int] = None,
-        with_na_hint: bool = False,
-        with_homepage_hint: bool = False,
     ) -> None:
         super().__init__(seed)
 
-        # task properties, will be used to set up the browsergym environment
-        self.viewport = {"width": 1280, "height": 720}
-        self.slow_mo = 1000
-        self.timeout = 30000
         self.oodarena_instance = OodArenaInstance()
         self.task_is_setup = False
         
@@ -38,8 +31,8 @@ class BrowserOODArenaTask(AbstractBrowserTask):
         with open(task_data_path) as f:
             self.task_configs = json.load(f)
         
-        # TODO: should goal be the original ID goal? so may need to be passed as argument?
-        self.goal = self.task_configs[task_id]['goal']
+        self.ood_goal = self.task_configs[task_id]['goal']
+        self.start_url = self.task_configs[task_id]['start_url']
     
     def setup(self, page: playwright.sync_api.Page) -> Tuple[str, dict]:
         """
@@ -54,15 +47,17 @@ class BrowserOODArenaTask(AbstractBrowserTask):
         if self.task_is_setup:
             return ValueError("The task is already setup")
         
-        self.page = page
-        # Set the page timeout
-        page.set_default_timeout(self.timeout)
-        
+        # Navigate to the start URL of OOD task, which may have multiple URLs
         logger.info(f"Navigating to OOD start url: {self.start_url}")
-        page.goto(self.start_url)
+        if self.start_url:
+            start_urls = self.start_url.split(" |AND| ")
+            for i, url in enumerate(start_urls):
+                page.goto(url)
+                if i < len(start_urls) - 1:
+                    page = page.context.new_page()
         
         self.task_is_setup = True
-        return self.goal, {}
+        return self.ood_goal, {}
     
     def teardown(self):
         """
@@ -70,19 +65,38 @@ class BrowserOODArenaTask(AbstractBrowserTask):
         """
         pass
     
-    def validate(self, page: playwright.sync_api.Page, chat_messages: list[str]) -> Tuple[float, bool, str, dict]:
+    def validate(self, page: playwright.sync_api.Page, chat_messages: list[str], id_page_history: dict) -> Tuple[float, bool, str, dict]:
         """
-        Validate the task was completed successfully
+        Validate the task was completed successfully.
         Args:
             page: the active playwright page.
             chat_messages: the chat messages.
+            id_page_history: the page history from the original ID environment.
         Returns:
             reward: float, the reward obtained since last call to validate().
             done: boolean flag, indicates if the task has finished or not (be it success or fail).
             message: string, a new user message for the chat.
             info: dictionnary, custom information from the task.
         """
-        pass
+        # Check if the current page URL matches any URL from the original ID environment page history
+        if self.ood_goal == "Back": # If the ood goal is to navigate back to an ID page
+            current_url = page.url
+            if current_url in id_page_history:
+                logger.info("Agent has successfully navigated back to an ID environment page.")
+                reward = 0  # TODO: Assign a positive reward for returning to an ID page
+                done = True
+                message = "Successfully returned to an original tab."
+                info = {}
+            else:
+                logger.info("Agent is still on an OOD task page.")
+                reward = 0  # No reward if the agent hasn't returned to an ID page
+                done = False
+                message = ""
+                info = {}
+        elif self.ood_goal == "Report": # TODO: Implement the case where the ood goal is to report an issue
+            pass
+            
+        return reward, done, message, info
     
     def cheat(self, page: playwright.sync_api.Page, chat_messages: list[str]) -> None:
         """
@@ -91,5 +105,4 @@ class BrowserOODArenaTask(AbstractBrowserTask):
             page: the active playwright page.
             chat_messages: the chat messages.
         """
-        pass
-        
+        raise NotImplementedError("Cheat functionality is not implemented for OOD tasks.")

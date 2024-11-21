@@ -1,6 +1,10 @@
 __version__ = "0.0.1"
 
-from browsergym.core.registration import register_task
+"""
+    Register all tasks from the JSON file which has all the information about OOD tasks.
+"""
+
+from browsergym.core.registration import register_ood_task
 import json
 
 # 读取 JSON 文件
@@ -23,7 +27,7 @@ def get_task_id_range_and_check_continuity(data):
 
     return min_task_id, max_task_id, is_continuous
 
-# 假设 JSON 文件路径
+# OOD tasks data path
 file_path = "./task_data/tasks.json"
 
 # 读取文件数据
@@ -42,9 +46,9 @@ for task in data:
     ood_task_id = task["ood_task_id"]
     
     gym_id = f"oodarena.{ood_task_type}.{ood_task_id}"
-    register_task(
+    register_ood_task(
         gym_id,
         task.BrowserOODArenaTask,
-        task_kwargs={"task_id": ood_task_id}, # TODO
+        task_kwargs={"ood_task_id": ood_task_id}, # TODO
     )
     ALL_OODARENA_TASK_IDS.append(gym_id)
