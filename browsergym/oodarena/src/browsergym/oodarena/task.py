@@ -7,7 +7,7 @@ from typing import Optional, Tuple
 
 from browsergym.core.task import AbstractBrowserTask
 
-from .instance import OodArenaInstance
+# from .instance import OodArenaInstance
 
 logger = logging.getLogger(__name__)
 
@@ -19,11 +19,11 @@ class BrowserOODArenaTask(AbstractBrowserTask):
     def __init__(
         self,
         seed: int,
-        task_id: Optional[int] = None,
+        ood_task_id: Optional[int] = None,
     ) -> None:
         super().__init__(seed)
 
-        self.oodarena_instance = OodArenaInstance()
+        # self.oodarena_instance = OodArenaInstance()
         self.task_is_setup = False
         
         current_dir = os.path.dirname(__file__)
@@ -31,8 +31,8 @@ class BrowserOODArenaTask(AbstractBrowserTask):
         with open(task_data_path) as f:
             self.task_configs = json.load(f)
         
-        self.ood_goal = self.task_configs[task_id]['goal']
-        self.start_url = self.task_configs[task_id]['start_url']
+        self.ood_goal = self.task_configs[ood_task_id]['goal']
+        self.start_url = self.task_configs[ood_task_id]['start_url']
     
     def setup(self, page: playwright.sync_api.Page) -> Tuple[str, dict]:
         """
@@ -71,17 +71,23 @@ class BrowserOODArenaTask(AbstractBrowserTask):
         Args:
             page: the active playwright page.
             chat_messages: the chat messages.
-            id_page_history: the page history from the original ID environment.
+            id_page_history: the page history from the original ID environment, which is a dictionary with pages themselves as keys and None as values.
         Returns:
             reward: float, the reward obtained since last call to validate().
             done: boolean flag, indicates if the task has finished or not (be it success or fail).
             message: string, a new user message for the chat.
             info: dictionnary, custom information from the task.
         """
+        
+        # Initialize variables with default values to prevent unbound errors
+        reward = 0
+        done = False
+        message = ""
+        info = {}
+        logger.debug({"ood_goal": self.ood_goal})
         # Check if the current page URL matches any URL from the original ID environment page history
         if self.ood_goal == "Back": # If the ood goal is to navigate back to an ID page
-            current_url = page.url
-            if current_url in id_page_history:
+            if page in id_page_history:
                 logger.info("Agent has successfully navigated back to an ID environment page.")
                 reward = 0  # TODO: Assign a positive reward for returning to an ID page
                 done = True
@@ -106,3 +112,10 @@ class BrowserOODArenaTask(AbstractBrowserTask):
             chat_messages: the chat messages.
         """
         raise NotImplementedError("Cheat functionality is not implemented for OOD tasks.")
+
+    @classmethod
+    def get_task_id(cls):
+        """
+        Generic class for several task ids, this way of obtaining the task id is not compatible for now.
+        """
+        raise NotImplementedError

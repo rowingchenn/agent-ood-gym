@@ -222,7 +222,20 @@ class BrowserEnv(gym.Env, ABC):
         timeout = override_property(self.task, self, "timeout")
         locale = override_property(self.task, self, "locale")
         timezone_id = override_property(self.task, self, "timezone_id")
+        no_viewport = True if self.resizeable_window else None
+        record_video_dir = (
+            Path(self.record_video_dir) / "task_video" if self.record_video_dir else None
+        )
 
+        self.context_options = {
+            "no_viewport": no_viewport,
+            "viewport": viewport,
+            "record_video_dir": record_video_dir,
+            "record_video_size": viewport,
+            "locale": locale,
+            "timezone_id": timezone_id,
+            **self.pw_context_kwargs,
+        }
         # use the global Playwright instance
         pw: playwright.sync_api.Playwright = _get_global_playwright()
         # important: change playwright's test id attribute from "data-testid" to "bid"
@@ -242,18 +255,7 @@ class BrowserEnv(gym.Env, ABC):
         )
 
         # create a new browser context for pages
-        self.context = self.browser.new_context(
-            no_viewport=True if self.resizeable_window else None,
-            viewport=viewport,
-            record_video_dir=(
-                Path(self.record_video_dir) / "task_video" if self.record_video_dir else None
-            ),
-            record_video_size=viewport,
-            locale=locale,
-            timezone_id=timezone_id,
-            # will raise an Exception if above args are overriden
-            **self.pw_context_kwargs,
-        )
+        self.context = self.browser.new_context(**self.context_options)
 
         # set default timeout
         self.context.set_default_timeout(timeout)
@@ -261,6 +263,10 @@ class BrowserEnv(gym.Env, ABC):
         # hack: keep track of the active page with a javascript callback
         # there is no concept of active page in playwright
         # https://github.com/microsoft/playwright/issues/2603
+        # encapsulate the original callback so that the env instance of the active page can switched bewteen id and ood
+        # self.context.expose_binding(
+        #     "browsergym_page_activated", self._browsergym_page_activated_binding
+        # )
         self.context.expose_binding(
             "browsergym_page_activated", lambda source: self._activate_page_from_js(source["page"])
         )
@@ -370,7 +376,7 @@ document.addEventListener("visibilitychange", () => {
             }
 
         return obs, info
-    
+
     def step(self, action: str) -> tuple:
 
         self.last_action = action
@@ -446,9 +452,9 @@ document.addEventListener("visibilitychange", () => {
         terminated = done or (
             self.terminate_on_infeasible and self.infeasible_message_received
         )  # task or agent can terminate the episode
-        truncated = False 
+        truncated = False
         return obs, reward, terminated, truncated, info
-        
+
     def _task_validate(self):
         # back-up these in case validate() navigates pages and messes the history
         prev_active_page = self.page
@@ -465,7 +471,7 @@ document.addEventListener("visibilitychange", () => {
             self.page_history = prev_page_history
 
         return reward, done, user_message, info
-    
+
     def _wait_for_user_message(self):
         # if last message is from the assistant, wait for a user message to continue
         # TODO: be smarter about when to wait for a user message (different action from the assistant?)
@@ -484,13 +490,21 @@ document.addEventListener("visibilitychange", () => {
                 except playwright.sync_api.Error:
                     pass
 
+    # 这个解决方案行不通
+    # def _browsergym_page_activated_binding(source):
+    #     page = source["page"]
+    #     env = getattr(page, "env", None)
+    #     if env:
+    #         env._activate_page_from_js(page)
+    #     else:
+    #         logger.warning(f"No environment found for page {page}")
+
     def _activate_page_from_js(self, page: playwright.sync_api.Page):
         logger.debug(f"_activate_page_from_js(page) called, page={str(page)}")
         if not page.context == self.context:
             raise RuntimeError(
                 f"Unexpected: activating a page that belongs to a different browser context ({page})."
             )
-
         # add the activated page to the page history (or move it to last which is the most recent)
         if page in self.page_history:
             self.page_history[page] = self.page_history.pop(
@@ -498,7 +512,6 @@ document.addEventListener("visibilitychange", () => {
             )  # move page to the end of dictionnary
         else:
             self.page_history[page] = None  # add page to the end of dictionnary
-
         self.page = page
 
     def _active_page_check(self):
@@ -581,9 +594,10 @@ document.addEventListener("visibilitychange", () => {
             "last_action_error": self.last_action_error,
             "elapsed_time": np.asarray([time.time() - self.start_time]),
         }
-        
+
         return obs
-    
+
+
 class BrowserOODEnv(BrowserEnv):
     """BrowserOODEnv extends BrowserEnv to handle out-of-distribution tasks by adding new tabs."""
 
@@ -599,55 +613,93 @@ class BrowserOODEnv(BrowserEnv):
         # Initialize parent with placeholder arguments, as we need to delay copying original env state
         super().__init__(
             task_entrypoint=ood_task_entrypoint,
-            task_kwargs=ood_task_kwargs,
+            task_kwargs=dict(**ood_task_kwargs),
         )
 
         # These properties will be set during the reset phase
         self.id_env = None
-        self.ood_page = None
+        self.page = None
         self.ood_task = None
         self.id_task = None
         self.id_goal_object = None
 
-    def reset(self, id_env: BrowserEnv, seed: Optional[int] = None):
+    def reset(self, *, seed=None, options=None):
         """
         Reset the OOD environment by copying properties from an existing BrowserEnv instance,
         except for the task, which will be a new OOD task.
 
         Args:
-            id_env: The original BrowserEnv instance to clone.
+            seed: Random seed for the environment.
+            options: A dictionary of optional parameters, including:
+                - id_env: The original BrowserEnv instance to clone.
+
+        Returns:
+            observation: The initial observation for the environment.
+            info: Additional environment information.
         """
+        # Extract id_env from options
+        id_env = options.get("id_env") if options else None
+        if id_env is None:
+            raise ValueError("id_env must be provided in options to reset the environment.")
+
         # Save the id environment reference
-        self.id_env = id_env
+        self.id_env = id_env.unwrapped
 
         # Copy properties from the id environment
-        self.browser = id_env.browser
-        self.context = id_env.context
-        self.chat = id_env.chat
-        self.page_history = id_env.page_history
-        self.id_page_history = copy.deepcopy(id_env.page_history)  # Copy page history for validation
+        self.browser = self.id_env.browser
+
+        self.context = self.id_env.context
+
+        self.chat = self.id_env.chat
+        self.page_history = self.id_env.page_history
+        self.action_mapping = self.id_env.action_mapping
+        self.wait_for_user_message = self.id_env.wait_for_user_message
+        self.id_page_history = self.id_env.page_history.copy()  # Copy page history for validation
 
         # Save the id task
-        self.id_task = id_env.task
+        self.id_task = self.id_env.task
 
         # 延续id task的goal
-        self.id_goal_object = copy.deepcopy(id_env.goal_object)
+        self.id_goal_object = copy.deepcopy(self.id_env.goal_object)
 
         # Set up a new OOD task
         self.ood_task = self.task_entrypoint(seed=seed, **self.task_kwargs)
 
-        # Open a new page for the OOD task
-        self.ood_page = self.context.new_page()
+        # Open a new page for the OOD task and set it as the active page
+        self.id_env.page = self.id_env.page.context.new_page()
+        self.id_env.page.evaluate(
+            """\
+const event = new Event('pageshow', {
+    bubbles: true,  // Whether the event bubbles up through the DOM or not
+    cancelable: false  // Whether the event can be canceled
+});
+window.dispatchEvent(event);
+"""
+        )
 
         # Setup the OOD task with the new page
         # TODO: pass the id task goal to the OOD task
-        ood_task_goal, ood_task_info = self.ood_task.setup(page=self.ood_page)
+        ood_task_goal, ood_task_info = self.ood_task.setup(page=self.id_env.page)
+        self.page = self.id_env.page
+
+        self._wait_dom_loaded()
+        self._active_page_check()
+
+        self.start_time = time.time()
+
+        # no action yet
+        self.last_action = ""
+        self.last_action_error = ""
+        self.infeasible_message_received = False
+
+        # if asked, wait for user message
+        self._wait_for_user_message()
 
         # Extract observation and info
         obs = self._get_ood_obs()
-        info = {
-            "task_info": {},
-        }
+        info = {}
+        info["ood_task_goal"] = ood_task_goal
+        info["ood_task_info"] = ood_task_info
 
         return obs, info
 
@@ -658,11 +710,11 @@ class BrowserOODEnv(BrowserEnv):
         for retries_left in reversed(range(EXTRACT_OBS_MAX_TRIES)):
             try:
                 # pre-extraction, mark dom elements (set bid, set dynamic attributes like value and checked)
-                _pre_extract(self.ood_page, tags_to_mark=self.tags_to_mark, lenient=(retries_left == 0))
+                _pre_extract(self.page, tags_to_mark=self.tags_to_mark, lenient=(retries_left == 0))
 
-                dom = extract_dom_snapshot(self.ood_page)
-                axtree = extract_merged_axtree(self.ood_page)
-                focused_element_bid = extract_focused_element_bid(self.ood_page)
+                dom = extract_dom_snapshot(self.page)
+                axtree = extract_merged_axtree(self.page)
+                focused_element_bid = extract_focused_element_bid(self.page)
                 extra_properties = extract_dom_extra_properties(dom)
             except (playwright.sync_api.Error, MarkingError) as e:
                 err_msg = str(e)
@@ -679,7 +731,7 @@ class BrowserOODEnv(BrowserEnv):
                         f"An error occured while extracting the dom and axtree. Retrying ({retries_left}/{EXTRACT_OBS_MAX_TRIES} tries left).\n{repr(e)}"
                     )
                     # post-extract cleanup (ARIA attributes)
-                    _post_extract(self.ood_page)
+                    _post_extract(self.page)
                     time.sleep(0.5)
                     continue
                 else:
@@ -687,7 +739,7 @@ class BrowserOODEnv(BrowserEnv):
             break
 
         # post-extraction cleanup of temporary info in dom
-        _post_extract(self.ood_page)
+        _post_extract(self.page)
 
         # obs is generic to all tasks
         obs = {
@@ -698,9 +750,9 @@ class BrowserOODEnv(BrowserEnv):
             ),  # new goal format, list of messages openai style
             "open_pages_urls": tuple(page.url for page in self.context.pages),
             "open_pages_titles": tuple(page.title() for page in self.context.pages),
-            "active_page_index": np.asarray([self.context.pages.index(self.ood_page)]),
-            "url": self.ood_page.url,  # redundant with "open_pages_urls" and "active_page_index"
-            "screenshot": extract_screenshot(self.ood_page),
+            "active_page_index": np.asarray([self.context.pages.index(self.page)]),
+            "url": self.page.url,  # redundant with "open_pages_urls" and "active_page_index"
+            "screenshot": extract_screenshot(self.page),
             "dom_object": dom,
             "axtree_object": axtree,
             "extra_element_properties": extra_properties,
@@ -746,10 +798,13 @@ class BrowserOODEnv(BrowserEnv):
                 code = action
             execute_python_code(
                 code,
-                self.ood_page,
+                self.id_env.page,  # 保证所有的action都执行在id_env的page上，这样可以保证回调函数_activate_page_from_js的正确执行
                 send_message_to_user=send_message_to_user,
                 report_infeasible_instructions=report_infeasible_instructions,
             )
+            self.page = (
+                self.id_env.page
+            )  # 执行后再把ood的self.page更新指向id的page，主要是为了后面的函数中用self.page的变量名都不用改
             self.last_action_error = ""
         except Exception as e:
             self.last_action_error = f"{type(e).__name__}: {e}"
@@ -777,8 +832,10 @@ class BrowserOODEnv(BrowserEnv):
 
         logger.debug(f"Initiating OOD task validation")
         # Extract reward, done, user_message, info (task-specific)
-        reward, done, user_message, info = self.ood_task.validate(self.ood_page, self.chat.messages, self.id_page_history)
-        info["task_info"] = info
+        reward, done, user_message, task_info = self.ood_task.validate(
+            self.page, self.chat.messages, self.id_page_history
+        )
+        info["task_info"] = task_info
         logger.debug(f"OOD task validation done")
 
         # Add any user message sent by the task to the chat
@@ -793,11 +850,10 @@ class BrowserOODEnv(BrowserEnv):
         terminated = done or (
             self.terminate_on_infeasible and self.infeasible_message_received
         )  # task or agent can terminate the episode
-        truncated = False  
+        truncated = False
 
         return obs, reward, terminated, truncated, info
-    
-    # TODO: 必须把OOD打开的新page全部关闭，否则GenericWebArenaTask在valid时会返回url不合法的错误！
+
     def close(self):
         """
         Close the OOD environment. This involves only closing new pages created for OOD tasks.
@@ -805,13 +861,14 @@ class BrowserOODEnv(BrowserEnv):
         if self.ood_task:
             self.ood_task.teardown()
             self.ood_task = None
-        if self.ood_page:
-            self.ood_page.close()
-            self.ood_page = None
+        if self.page:
+            self.page.close()
+            self.page = None
 
+        # TODO: now the naive way is to just 把id_env原来的page_history还原回去，让它继续运行；感觉可以改进，比如保留page_history中OOD的部分，只不过手动给一个action把url切回来！！！
         # Restore the original page history to ensure the id_env consistency
-        self.page_history = copy.deepcopy(self.id_page_history)
-        
+        self.id_env.page_history = self.id_page_history.copy()
+
         # Do not close the original environment browser/context/chat
         # Only clean up any resources used specifically for OOD
 

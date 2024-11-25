@@ -46,6 +46,7 @@ class EnvArgs(DataClassJsonMixin):
     slow_mo: Optional[int] = None  # use default value from BrowserGym
     storage_state: Optional[str | Path | dict] = None
     task_kwargs: Optional[dict] = None  # use default value from BrowserGym
+    timeout: Optional[int] = None
 
     def make_env(self, action_mapping, exp_dir, exp_task_kwargs: dict = {}, ood_args: dict = {}):
         """
@@ -69,6 +70,8 @@ class EnvArgs(DataClassJsonMixin):
             extra_kwargs["task_kwargs"] = self.task_kwargs
         if exp_task_kwargs:
             extra_kwargs["task_kwargs"] = extra_kwargs.get("task_kwargs", {}) | exp_task_kwargs
+        if self.timeout:
+            extra_kwargs["timeout"] = self.timeout
 
         # assistantbench hack, write the task output (agent prediction) to a file in the experiment's directory
         # TODO: find a better way to deal with this
@@ -77,29 +80,24 @@ class EnvArgs(DataClassJsonMixin):
                 "output_file": exp_dir / "assistantbench-prediction.json"
             }
 
-        if self.task_name.startswith("oodarena"):
-            if ood_args is None:
-                raise ValueError("OOD args must be provided for OOD environments.")
-            ood_env_name = f"oodarena.{ood_args["ood_task_type"]}.{ood_args["ood_task_id"]}"
+        
+        if ood_args:
+            ood_env_name = f"oodarena.{ood_args['ood_task_type']}.{ood_args['ood_task_id']}"
             return gym.make(
                 _get_env_name(ood_env_name),
                 disable_env_checker=True,
                 max_episode_steps=ood_args["ood_max_steps"],
+            )
+        else:
+            return gym.make(
+                _get_env_name(self.task_name),
+                disable_env_checker=True,
+                max_episode_steps=self.max_steps,
                 headless=self.headless,
                 wait_for_user_message=self.wait_for_user_message,
                 action_mapping=action_mapping,  # action mapping is provided by the agent
                 **extra_kwargs,
             )
-            
-        return gym.make(
-            _get_env_name(self.task_name),
-            disable_env_checker=True,
-            max_episode_steps=self.max_steps,
-            headless=self.headless,
-            wait_for_user_message=self.wait_for_user_message,
-            action_mapping=action_mapping,  # action mapping is provided by the agent
-            **extra_kwargs,
-        )
 
 @dataclass
 class AbstractAgentArgs(ABC):
@@ -203,7 +201,10 @@ class ExpArgs:
 
         if self.exp_name is None:
             task_name = self.env_args.task_name
-            self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args.ood_task_id}"
+            if self.ood_args is not None:
+                self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args['ood_task_id']}"
+            else:
+                self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}"
 
         # if exp_dir exists, it means it's a re-run, move the old one
         if self.exp_dir is not None:
@@ -267,8 +268,10 @@ class ExpArgs:
             )
             logger.debug(f"Environment reset, first observation received and first step created.")
             
+            if self.ood_args != None:
+                self.ood_done = False # 用来跳出ood的episode
             while not step_info.is_done:  # when truncated or terminated, the episode is done
-                if self.ood_args != None and self.ood_args["ood_insert_step"] == step_info.step:  # simulate OOD observation step
+                if self.ood_args is not None and self.ood_args["ood_insert_step"] == step_info.step and not self.ood_done:  # simulate OOD observation step
                     ood_env = self.env_args.make_env(
                         action_mapping=agent.action_set.to_python_code,
                         exp_dir=self.exp_dir,
@@ -297,10 +300,10 @@ class ExpArgs:
                         )
                         logger.debug(f"OOD step info saved.")
 
-                        _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
+                        _send_chat_info(ood_env.unwrapped.chat, ood_action, ood_step_info.agent_info)
                         logger.debug(f"Chat info sent.")
                         
-                        if action is None:
+                        if ood_action is None:
                             logger.debug(f"Agent returned None action in OOD environments. Ending OOD episode.")
                             break
                         
@@ -309,8 +312,9 @@ class ExpArgs:
                         episode_info.append(ood_step_info)
                         
                         ood_step_info.from_step(
-                            ood_env, obs_preprocessor=agent.obs_preprocessor, ood_type=self.ood_type
+                            env=ood_env, action=ood_action, obs_preprocessor=agent.obs_preprocessor
                         )
+                    self.ood_done = True
                 else:  # normal step
                     logger.debug(f"Starting step {step_info.step}.")
                     action = step_info.from_action(agent)
@@ -510,7 +514,7 @@ class StepInfo:
     def from_reset_ood(self, ood_env: gym.Env, id_env: gym.Env, seed: int, obs_preprocessor: callable):
         t = self.profiling
         t.env_start = time.time()
-        self.obs, env_info = ood_env.reset(id_env, seed = seed)
+        self.obs, env_info = ood_env.reset(seed = seed, options={"id_env": id_env})
         t.env_stop = time.time()
 
         t.action_exec_start = env_info.get("recording_start_time", t.env_start)
