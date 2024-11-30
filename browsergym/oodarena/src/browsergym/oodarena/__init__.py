@@ -5,7 +5,9 @@ __version__ = "0.0.1"
 """
 
 from browsergym.core.registration import register_ood_task
+from . import task
 import json
+import os
 
 # 读取 JSON 文件
 def read_json_file(file_path):
@@ -16,7 +18,7 @@ def read_json_file(file_path):
 # 获取 task_id 的范围，并验证连续性
 def get_task_id_range_and_check_continuity(data):
     # 提取所有的 task_id
-    task_ids = sorted(item["task_id"] for item in data)
+    task_ids = sorted(item["ood_task_id"] for item in data)
     
     # 获取最小和最大 task_id
     min_task_id = min(task_ids)
@@ -27,8 +29,11 @@ def get_task_id_range_and_check_continuity(data):
 
     return min_task_id, max_task_id, is_continuous
 
-# OOD tasks data path
-file_path = "./task_data/tasks.json"
+# 获取当前文件所在目录的路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 构建 JSON 文件的绝对路径
+file_path = os.path.join(current_dir, "task_data", "test.json")
 
 # 读取文件数据
 data = read_json_file(file_path)
@@ -41,14 +46,14 @@ if not continuous:
 
 ALL_OODARENA_TASK_IDS = []
 
-for task in data:
-    ood_task_type = task["ood_task_type"]
-    ood_task_id = task["ood_task_id"]
+for task_data in data:
+    ood_task_type = task_data["ood_task_type"]
+    ood_task_id = task_data["ood_task_id"]
     
     gym_id = f"oodarena.{ood_task_type}.{ood_task_id}"
     register_ood_task(
         gym_id,
         task.BrowserOODArenaTask,
-        task_kwargs={"ood_task_id": ood_task_id}, # TODO
+        ood_task_kwargs={"ood_task_id": ood_task_id}, # TODO
     )
     ALL_OODARENA_TASK_IDS.append(gym_id)

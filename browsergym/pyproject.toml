@@ -3,8 +3,8 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools"]
 
 [project]
-name = "agent-ood-gym"
-description = "agent-ood-gym: Compositive gym environments for out-of-distribution detection for LLM agents based on BrowserGym"
+name = "browsergym"
+description = "BrowserGym: a gym environment for web task automation in the Chromium browser"
 authors = [
     {name = "Rim Assouel"},
     {name = "Léo Boisvert"},
