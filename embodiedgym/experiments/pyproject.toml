@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling", "hatch-requirements-txt"]
+build-backend = "hatchling.build"
+
+[project]
+name = "embodiedgym-experiments"
+description = "Experimentation tools for EmbodiedGym"
+authors = [
+    {name = "Weichen Zhang"}
+]
+readme = "README.md"
+requires-python = ">3.7"
+license = {text = "Apache-2.0"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: Apache Software License",
+]
+dynamic = ["dependencies", "version"]
+
+[project.optional-dependencies]
+
+
+[project.urls]
+
+
+[tool.hatch.version]
+path = "../core/src/embodiedgym/core/__init__.py"
+
+[tool.hatch.metadata.hooks.requirements_txt]
+files = ["requirements.txt"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/embodiedgym"]

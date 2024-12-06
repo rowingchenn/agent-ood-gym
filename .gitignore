@@ -150,3 +150,6 @@ tests/assistantbench/assistantbench-predictions-test.jsonl
 
 # weblinx
 bg_wl_data/
+
+# alfworld data
+embodiedgym/alfworld/data/
