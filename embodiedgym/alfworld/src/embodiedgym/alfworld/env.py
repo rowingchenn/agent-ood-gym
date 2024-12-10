@@ -1,17 +1,3 @@
-import os
-import sys
-import json
-import glob
-import random
-import numpy as np
-
-import textworld
-import textworld.agents
-import textworld.gym
-import gym
-
-from alfworld.agents.utils.misc import Demangler, get_templated_task_desc, add_task_to_grammar
-import alfworld.agents.modules.generic as generic
 from alfworld.agents.environment.alfred_tw_env import AlfredTWEnv
 
 

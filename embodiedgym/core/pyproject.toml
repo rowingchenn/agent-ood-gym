@@ -3,13 +3,13 @@ requires = ["hatchling", "hatch-requirements-txt"]
 build-backend = "hatchling.build"
 
 [project]
-name = "embodiedgym-alfworld"
-description = "Alfworld benchmark for EmbodiedGym"
+name = "embodiedgym-core"
+description = ""
 authors = [
     {name = "Weichen Zhang", email = "rowingchenn@berkeley.edu"}
 ]
 readme = "README.md"
-requires-python = ">3.7"
+requires-python = ">3.9"
 license = {text = "Apache-2.0"}
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -25,7 +25,7 @@ dynamic = ["dependencies", "version"]
 homepage = ""
 
 [tool.hatch.version]
-path = "../core/src/embodiedgym/core/__init__.py"
+path = "src/embodiedgym/core/__init__.py"
 
 [tool.hatch.metadata.hooks.requirements_txt]
 files = ["requirements.txt"]

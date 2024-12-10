@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "embodiedgym-experiments"
 description = "Experimentation tools for EmbodiedGym"
 authors = [
-    {name = "Weichen Zhang"}
+    {name = "Weichen Zhang", email = "rowingchenn@berkeley.edu"}
 ]
 readme = "README.md"
 requires-python = ">3.7"

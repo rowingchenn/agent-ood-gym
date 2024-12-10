@@ -31,7 +31,8 @@ from browsergym.experiments.utils import count_messages_token, count_tokens
 from browsergym.experiments.loop import AbstractAgentArgs, save_package_versions
 
 from embodiedgym.alfworld.utils import load_config, load_prompts
-from embodiedgym.alfworld import ALFWORLD_VALID_SEEN, ALFWORLD_VALID_UNSEEN, SingleAlfredTWEnv
+from embodiedgym.alfworld import ALFWORLD_VALID_SEEN, ALFWORLD_VALID_UNSEEN
+from embodiedgym.alfworld.env import SingleAlfredTWEnv
 
 logger = logging.getLogger(__name__)
 

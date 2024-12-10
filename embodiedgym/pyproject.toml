@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling", "hatch-requirements-txt"]
-build-backend = "hatchling.build"
+build-backend = "setuptools.build_meta"
+requires = ["setuptools"]
 
 [project]
-name = "embodiedgym-alfworld"
-description = "Alfworld benchmark for EmbodiedGym"
+name = "embodiedgym"
+description = "EmbodiedGym: a gym environment for embodied task automation in the simulated world"
 authors = [
     {name = "Weichen Zhang", email = "rowingchenn@berkeley.edu"}
 ]
@@ -19,16 +19,12 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "License :: OSI Approved :: Apache Software License",
 ]
-dynamic = ["dependencies", "version"]
+version="0.1.0"
+dependencies = [
+    "embodiedgym-core==0.1.0",
+    "embodiedgym-experiments==0.1.0",
+    "embodiedgym-alfworld==0.1.0",
+]
 
-[project.urls]
-homepage = ""
-
-[tool.hatch.version]
-path = "../core/src/embodiedgym/core/__init__.py"
-
-[tool.hatch.metadata.hooks.requirements_txt]
-files = ["requirements.txt"]
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/embodiedgym"]
+[tool.setuptools]
+packages = []  # meta distribution, packages are included as dependencies
