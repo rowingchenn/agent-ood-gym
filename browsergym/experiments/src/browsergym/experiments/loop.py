@@ -75,12 +75,6 @@ class EnvArgs(DataClassJsonMixin):
 
         # assistantbench hack, write the task output (agent prediction) to a file in the experiment's directory
         # TODO: find a better way to deal with this
-        if self.task_name.startswith("assistantbench.test"):
-            extra_kwargs["task_kwargs"] = extra_kwargs.get("task_kwargs", {}) | {
-                "output_file": exp_dir / "assistantbench-prediction.json"
-            }
-
-        
         if ood_args:
             ood_env_name = f"oodarena.{ood_args['ood_task_type']}.{ood_args['ood_task_id']}"
             return gym.make(
@@ -98,6 +92,7 @@ class EnvArgs(DataClassJsonMixin):
                 action_mapping=action_mapping,  # action mapping is provided by the agent
                 **extra_kwargs,
             )
+
 
 @dataclass
 class AbstractAgentArgs(ABC):
@@ -260,31 +255,40 @@ class ExpArgs:
             )
 
             logger.debug(f"Environment created.")
-            
+
             step_info = StepInfo(step=0)
             episode_info = [step_info]
             step_info.from_reset(
                 env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
             )
             logger.debug(f"Environment reset, first observation received and first step created.")
-            
+
             if self.ood_args != None:
-                self.ood_done = False # 用来跳出ood的episode
+                self.ood_done = False  # 用来跳出ood的episode
             while not step_info.is_done:  # when truncated or terminated, the episode is done
-                if self.ood_args is not None and self.ood_args["ood_insert_step"] == step_info.step and not self.ood_done:  # simulate OOD observation step
+                if (
+                    self.ood_args is not None
+                    and self.ood_args["ood_insert_step"] == step_info.step
+                    and not self.ood_done
+                ):  # simulate OOD observation step
                     ood_env = self.env_args.make_env(
                         action_mapping=agent.action_set.to_python_code,
                         exp_dir=self.exp_dir,
-                        ood_args=self.ood_args
+                        ood_args=self.ood_args,
                     )
                     logger.debug(f"OOD Environment created.")
-                    
+
                     # TODO
-                    ood_step_info = StepInfo(step=-1) # use -1 to indicate OOD step
+                    ood_step_info = StepInfo(step=-1)  # use -1 to indicate OOD step
                     ood_step_info.from_reset_ood(
-                        ood_env = ood_env, id_env = env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
+                        ood_env=ood_env,
+                        id_env=env,
+                        seed=self.env_args.task_seed,
+                        obs_preprocessor=agent.obs_preprocessor,
                     )
-                    logger.debug("OOD environment reset, OOD observation received and OOD step created.")
+                    logger.debug(
+                        "OOD environment reset, OOD observation received and OOD step created."
+                    )
                     while not ood_step_info.is_done:
                         logger.debug(f"Starting OOD step {ood_step_info.step}.")
                         ood_action = ood_step_info.from_action(agent)
@@ -296,21 +300,27 @@ class ExpArgs:
                             ood_step_info.truncated = True
 
                         ood_step_info.save_step_info(
-                            self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
+                            self.exp_dir,
+                            save_screenshot=self.save_screenshot,
+                            save_som=self.save_som,
                         )
                         logger.debug(f"OOD step info saved.")
 
-                        _send_chat_info(ood_env.unwrapped.chat, ood_action, ood_step_info.agent_info)
+                        _send_chat_info(
+                            ood_env.unwrapped.chat, ood_action, ood_step_info.agent_info
+                        )
                         logger.debug(f"Chat info sent.")
-                        
+
                         if ood_action is None:
-                            logger.debug(f"Agent returned None action in OOD environments. Ending OOD episode.")
+                            logger.debug(
+                                f"Agent returned None action in OOD environments. Ending OOD episode."
+                            )
                             break
-                        
+
                         # we use negative step number to indicate OOD steps
                         ood_step_info = StepInfo(step=ood_step_info.step - 1)
                         episode_info.append(ood_step_info)
-                        
+
                         ood_step_info.from_step(
                             env=ood_env, action=ood_action, obs_preprocessor=agent.obs_preprocessor
                         )
@@ -510,11 +520,13 @@ class StepInfo:
 
         if obs_preprocessor:
             self.obs = obs_preprocessor(self.obs)
-            
-    def from_reset_ood(self, ood_env: gym.Env, id_env: gym.Env, seed: int, obs_preprocessor: callable):
+
+    def from_reset_ood(
+        self, ood_env: gym.Env, id_env: gym.Env, seed: int, obs_preprocessor: callable
+    ):
         t = self.profiling
         t.env_start = time.time()
-        self.obs, env_info = ood_env.reset(seed = seed, options={"id_env": id_env})
+        self.obs, env_info = ood_env.reset(seed=seed, options={"id_env": id_env})
         t.env_stop = time.time()
 
         t.action_exec_start = env_info.get("recording_start_time", t.env_start)
@@ -630,6 +642,7 @@ def _aggregate_episode_stats(episode_info: list[StepInfo]):
             aggregated_stats[key] = None
     return aggregated_stats
 
+
 def _save_summary_info(
     episode_info: list[StepInfo],
     exp_dir,
@@ -660,7 +673,7 @@ def _save_summary_info(
     if len(episode_info) > 0:
         summary_info["terminated"] = episode_info[-1].terminated
         summary_info["truncated"] = episode_info[-1].truncated
-    
+
     # Additional OOD processing
     # if ood_teriminated is True, it means the ood task is validated by the agent
     # if ood_truncated is True, it means the agent failed to validate the ood task and reached the maximum number of steps or failed to parse actiopns in the OOD environment.

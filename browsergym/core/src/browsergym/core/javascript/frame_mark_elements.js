@@ -183,7 +183,7 @@ async ([parent_bid, bid_attr_name, tags_to_mark]) => {
     warning_msgs = new Array();
 
     // wait for all elements to be visited for visibility
-    let visibility_marking_timeout = 1000;  // ms
+    let visibility_marking_timeout = 3000;  // ms
     try {
         await until(() => elems_to_be_visited.size == 0, visibility_marking_timeout);
     } catch {
