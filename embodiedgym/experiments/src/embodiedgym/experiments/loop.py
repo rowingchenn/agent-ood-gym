@@ -26,8 +26,13 @@ from tqdm import tqdm
 from browsergym.core.chat import Chat
 from browsergym.core.action.parsers import highlevel_action_parser
 
-from .agent import Agent
-from .utils import count_messages_token, count_tokens
+from browsergym.experiments.agent import Agent
+from browsergym.experiments.utils import count_messages_token, count_tokens
+from browsergym.experiments.loop import AbstractAgentArgs, save_package_versions
+
+from embodiedgym.alfworld.utils import load_config, load_prompts
+from embodiedgym.alfworld import ALFWORLD_VALID_SEEN, ALFWORLD_VALID_UNSEEN
+from embodiedgym.alfworld.env import SingleAlfredTWEnv
 
 logger = logging.getLogger(__name__)
 
@@ -35,99 +40,26 @@ SEED_MAX = 2 ^ 32  # arbitrary max value (exclusive), seems large enough
 
 
 @dataclass
-class EnvArgs(DataClassJsonMixin):
-    task_name: str
-    task_seed: Optional[int] = None
-    max_steps: Optional[int] = None
-    headless: bool = True
-    record_video: bool = False
-    wait_for_user_message: bool = False
-    viewport: Optional[dict] = None  # use default value from BrowserGym
-    slow_mo: Optional[int] = None  # use default value from BrowserGym
-    storage_state: Optional[str | Path | dict] = None
-    task_kwargs: Optional[dict] = None  # use default value from BrowserGym
-    timeout: Optional[int] = None
+class AlfworldEnvArgs(DataClassJsonMixin):
+    config_path: str  # embodiedgym/alfworld/configs/base_config.yaml
+    prompts_path: str  # embodiedgym/alfworld/prompts/alfworld_multiturn_plan_first.json
+    valid_seen: bool = False
+    task_index: int = 0
+    max_step: int = 35
 
     def make_env(self, action_mapping, exp_dir, exp_task_kwargs: dict = {}, ood_args: dict = {}):
-        """
-        Instantiates the BrowserGym environment corresponding to the arguments (with some tweaks).
-
-        Args:
-            action_mapping: overrides the action mapping of the environment.
-            exp_dir: will set some environment parameters (e.g., record_video_dir) with respect to the directory where the experiment is running.
-            exp_task_kwargs: use with caution! Will override task parameters to experiment-specific values. Useful to set different server configs for different experiments, or output file paths within the experiment's folder (e.g., assistantbench).
-        """
-        extra_kwargs = {}
-        if self.record_video:
-            extra_kwargs["record_video_dir"] = exp_dir
-        if self.viewport:
-            extra_kwargs["viewport"] = self.viewport
-        if self.slow_mo is not None:
-            extra_kwargs["slow_mo"] = self.slow_mo
-        if self.storage_state:
-            extra_kwargs["pw_context_kwargs"] = {"storage_state": self.storage_state}
-        if self.task_kwargs is not None:
-            extra_kwargs["task_kwargs"] = self.task_kwargs
-        if exp_task_kwargs:
-            extra_kwargs["task_kwargs"] = extra_kwargs.get("task_kwargs", {}) | exp_task_kwargs
-        if self.timeout:
-            extra_kwargs["timeout"] = self.timeout
-
-        # assistantbench hack, write the task output (agent prediction) to a file in the experiment's directory
-        # TODO: find a better way to deal with this
-        if ood_args:
-            ood_env_name = f"oodarena.{ood_args['ood_task_type']}.{ood_args['ood_task_id']}"
-            return gym.make(
-                _get_env_name(ood_env_name),
-                disable_env_checker=True,
-                max_episode_steps=ood_args["ood_max_steps"],
-            )
+        if ood_args:  # TODO
+            pass
         else:
-            return gym.make(
-                _get_env_name(self.task_name),
-                disable_env_checker=True,
-                max_episode_steps=self.max_steps,
-                headless=self.headless,
-                wait_for_user_message=self.wait_for_user_message,
-                action_mapping=action_mapping,  # action mapping is provided by the agent
-                **extra_kwargs,
-            )
+            config = load_config(self.config_path)
+            # prompts = load_prompts(self.prompts_path)
+            if self.valid_seen:
+                data_item = os.path.join(ALFWORLD_VALID_SEEN[self.task_index], "game.tw-pddl")
+            else:
+                data_item = os.path.join(ALFWORLD_VALID_UNSEEN[self.task_index], "game.tw-pddl")
 
-
-@dataclass
-class AbstractAgentArgs(ABC):
-    """A template class that defines the required signature of an agent's arguments."""
-
-    agent_name: str = None
-
-    def __post_init__(self):
-        if self.agent_name is None:
-            self.agent_name = self.__class__.__name__
-
-    def prepare(self):
-        """Prepare the agent's LLM models before running the experiment."""
-        pass
-
-    def close(self):
-        """Close the agent's LLM models after running the experiment."""
-        pass
-
-    @abstractmethod
-    def make_agent(self) -> Agent:
-        """Comply the experiments.loop API for instantiating the agent."""
-
-
-def save_package_versions(exp_dir: Path):
-    """Save the versions of the installed packages in the experiment directory."""
-    python_dists = "\n".join(
-        sorted(
-            [
-                f'{dist.metadata["Name"]}=={dist.metadata["Version"]}'
-                for dist in importlib.metadata.distributions()
-            ]
-        )
-    )
-    (exp_dir / "package_versions.txt").write_text(python_dists)
+            env = SingleAlfredTWEnv(config, data_item)
+            env = env.init_env(batch_size=1)
 
 
 @dataclass
@@ -166,7 +98,7 @@ class ExpArgs:
     """
 
     agent_args: AbstractAgentArgs
-    env_args: EnvArgs
+    env_args: AlfworldEnvArgs
     exp_dir: str = None
     exp_name: str = None
     enable_debug: bool = True
@@ -191,8 +123,6 @@ class ExpArgs:
 
         This enables inspecting experiments that are not run yet.
         """
-        if self.env_args.task_seed is None:
-            self.env_args.task_seed = np.random.randint(0, SEED_MAX)
 
         if self.exp_name is None:
             task_name = self.env_args.task_name
@@ -259,8 +189,8 @@ class ExpArgs:
             step_info = StepInfo(step=0)
             episode_info = [step_info]
             step_info.from_reset(
-                env, seed=self.env_args.task_seed, obs_preprocessor=agent.obs_preprocessor
-            )
+                env, obs_preprocessor=agent.obs_preprocessor
+            )  # TODO: obs_preprocessor need to be redesigned in agents
             logger.debug(f"Environment reset, first observation received and first step created.")
 
             if self.ood_args != None:
@@ -508,10 +438,10 @@ class StepInfo:
 
         return self.action
 
-    def from_reset(self, env: gym.Env, seed: int, obs_preprocessor: callable):
+    def from_reset(self, env: gym.Env, obs_preprocessor: callable):
         t = self.profiling
         t.env_start = time.time()
-        self.obs, env_info = env.reset(seed=seed)
+        self.obs, env_info = env.reset()
         t.env_stop = time.time()
 
         t.action_exec_start = env_info.get("recording_start_time", t.env_start)
@@ -526,6 +456,7 @@ class StepInfo:
     ):
         t = self.profiling
         t.env_start = time.time()
+        # TODO: reset a embodied ood env should use different logic
         self.obs, env_info = ood_env.reset(seed=seed, options={"id_env": id_env})
         t.env_stop = time.time()
 

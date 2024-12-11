@@ -242,8 +242,13 @@ ACTION_SUBSETS = {
         click,  # CLICK
         press,  # PRESS ENTER
         go_back,  # GOBACK
+        go_forward,  # GOFORWARD
         goto,  # GOTO, SEARCH
+        new_tab,  # NEWTAB
+        tab_close,  # CLOSETAB
+        tab_focus,  # FOCUS
         send_msg_to_user,  # TERMINATE
+        report_infeasible,  # INFEASIBLE
     ],
 }
 
