@@ -32,7 +32,8 @@ from browsergym.experiments.loop import AbstractAgentArgs, save_package_versions
 
 from embodiedgym.alfworld.utils import load_config, load_prompts
 from embodiedgym.alfworld import ALFWORLD_VALID_SEEN, ALFWORLD_VALID_UNSEEN
-from embodiedgym.alfworld.env import SingleAlfredTWEnv
+
+from embodiedgym.core.env import AlfworldEnv
 
 logger = logging.getLogger(__name__)
 
@@ -46,20 +47,22 @@ class AlfworldEnvArgs(DataClassJsonMixin):
     valid_seen: bool = False
     task_index: int = 0
     max_step: int = 35
+    wait_for_user_message: bool = False
+    terminate_on_infeasible: bool = True
 
-    def make_env(self, action_mapping, exp_dir, exp_task_kwargs: dict = {}, ood_args: dict = {}):
+    def make_env(self, ood_args: dict = {}):
         if ood_args:  # TODO
             pass
         else:
-            config = load_config(self.config_path)
-            # prompts = load_prompts(self.prompts_path)
-            if self.valid_seen:
-                data_item = os.path.join(ALFWORLD_VALID_SEEN[self.task_index], "game.tw-pddl")
-            else:
-                data_item = os.path.join(ALFWORLD_VALID_UNSEEN[self.task_index], "game.tw-pddl")
-
-            env = SingleAlfredTWEnv(config, data_item)
-            env = env.init_env(batch_size=1)
+            env = AlfworldEnv(
+                self.config_path,
+                self.valid_seen,
+                self.task_index,
+                self.max_step,
+                self.wait_for_user_message,
+                self.terminate_on_infeasible,
+            )
+            return env
 
 
 @dataclass
@@ -269,8 +272,8 @@ class ExpArgs:
                     )
                     logger.debug(f"Step info saved.")
 
-                    _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
-                    logger.debug(f"Chat info sent.")
+                    # _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
+                    # logger.debug(f"Chat info sent.")
 
                     if action is None:
                         logger.debug(f"Agent returned None action. Ending episode.")
@@ -490,22 +493,10 @@ class StepInfo:
 
         self.stats = stats
 
-    def save_step_info(self, exp_dir, save_json=False, save_screenshot=True, save_som=False):
+    def save_step_info(self, exp_dir, save_json=False):
 
         # special treatment for some of the observation fields
         if self.obs is not None:
-            # save screenshots to separate files
-            screenshot = self.obs.pop("screenshot", None)
-            screenshot_som = self.obs.pop("screenshot_som", None)
-
-            if save_screenshot and screenshot is not None:
-                img = Image.fromarray(screenshot)
-                img.save(exp_dir / f"screenshot_step_{self.step}.png")
-
-            if save_som and screenshot_som is not None:
-                img = Image.fromarray(screenshot_som)
-                img.save(exp_dir / f"screenshot_som_step_{self.step}.png")
-
             # save goal object (which might contain images) to a separate file to save space
             if self.obs.get("goal_object", False):
                 # save the goal object only once (goal should never change once setup)
@@ -522,14 +513,6 @@ class StepInfo:
         if save_json:
             with open(exp_dir / "steps_info.json", "w") as f:
                 json.dump(self, f, indent=4, cls=DataclassJSONEncoder)
-
-        if self.obs is not None:
-            # add the screenshots back to the obs
-            # why do we need this?
-            if screenshot is not None:
-                self.obs["screenshot"] = screenshot
-            if screenshot_som is not None:
-                self.obs["screenshot_som"] = screenshot_som
 
 
 def _extract_err_msg(episode_info: list[StepInfo]):
