@@ -45,7 +45,7 @@ class AlfworldEnvArgs(DataClassJsonMixin):
     config_path: str  # embodiedgym/alfworld/configs/base_config.yaml
     prompts_path: str  # embodiedgym/alfworld/prompts/alfworld_multiturn_plan_first.json
     valid_seen: bool = False
-    task_index: int = 0
+    task_name: int = 0
     max_step: int = 35
     wait_for_user_message: bool = False
     terminate_on_infeasible: bool = True
@@ -111,9 +111,6 @@ class ExpArgs:
     logging_level: int = logging.INFO
     logging_level_stdout: int = logging.INFO
     exp_id: str = None
-    depends_on: tuple[str] = ()
-    save_screenshot: bool = True
-    save_som: bool = False
     ood_args: Dict[str, any] = None
 
     def make_id(self):
@@ -130,9 +127,9 @@ class ExpArgs:
         if self.exp_name is None:
             task_name = self.env_args.task_name
             if self.ood_args is not None:
-                self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args['ood_task_id']}"
+                self.exp_name = f"embodiedgym_{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args['ood_task_id']}"
             else:
-                self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}"
+                self.exp_name = f"embodiedgym_{self.agent_args.agent_name}_on_{task_name}"
 
         # if exp_dir exists, it means it's a re-run, move the old one
         if self.exp_dir is not None:
@@ -234,8 +231,6 @@ class ExpArgs:
 
                         ood_step_info.save_step_info(
                             self.exp_dir,
-                            save_screenshot=self.save_screenshot,
-                            save_som=self.save_som,
                         )
                         logger.debug(f"OOD step info saved.")
 
@@ -267,9 +262,7 @@ class ExpArgs:
                         # will end the episode after saving the step info.
                         step_info.truncated = True
 
-                    step_info.save_step_info(
-                        self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
-                    )
+                    step_info.save_step_info(self.exp_dir)
                     logger.debug(f"Step info saved.")
 
                     # _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
@@ -301,9 +294,7 @@ class ExpArgs:
         finally:
             try:
                 if step_info is not None:
-                    step_info.save_step_info(
-                        self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
-                    )
+                    step_info.save_step_info(self.exp_dir)
             except Exception as e:
                 logger.error(f"Error while saving step info in the finally block: {e}")
             try:

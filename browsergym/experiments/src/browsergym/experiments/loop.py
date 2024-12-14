@@ -197,9 +197,9 @@ class ExpArgs:
         if self.exp_name is None:
             task_name = self.env_args.task_name
             if self.ood_args is not None:
-                self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args['ood_task_id']}"
+                self.exp_name = f"browsergym_{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args['ood_task_id']}"
             else:
-                self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}"
+                self.exp_name = f"browsergym_{self.agent_args.agent_name}_on_{task_name}"
 
         # if exp_dir exists, it means it's a re-run, move the old one
         if self.exp_dir is not None:
