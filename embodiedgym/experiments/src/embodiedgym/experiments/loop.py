@@ -44,7 +44,7 @@ class AlfworldEnvArgs(DataClassJsonMixin):
     config_path: str  # embodiedgym/alfworld/configs/base_config.yaml
     prompts_path: str  # embodiedgym/alfworld/prompts/alfworld_multiturn_plan_first.json
     valid_seen: bool = False
-    task_index: int = 0
+    task_name: int = 0
     max_step: int = 35
 
     def make_env(self, action_mapping, exp_dir, exp_task_kwargs: dict = {}, ood_args: dict = {}):
@@ -108,9 +108,6 @@ class ExpArgs:
     logging_level: int = logging.INFO
     logging_level_stdout: int = logging.INFO
     exp_id: str = None
-    depends_on: tuple[str] = ()
-    save_screenshot: bool = True
-    save_som: bool = False
     ood_args: Dict[str, any] = None
 
     def make_id(self):
@@ -127,9 +124,9 @@ class ExpArgs:
         if self.exp_name is None:
             task_name = self.env_args.task_name
             if self.ood_args is not None:
-                self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args['ood_task_id']}"
+                self.exp_name = f"embodiedgym_{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args['ood_task_id']}"
             else:
-                self.exp_name = f"{self.agent_args.agent_name}_on_{task_name}"
+                self.exp_name = f"embodiedgym_{self.agent_args.agent_name}_on_{task_name}"
 
         # if exp_dir exists, it means it's a re-run, move the old one
         if self.exp_dir is not None:
@@ -231,8 +228,6 @@ class ExpArgs:
 
                         ood_step_info.save_step_info(
                             self.exp_dir,
-                            save_screenshot=self.save_screenshot,
-                            save_som=self.save_som,
                         )
                         logger.debug(f"OOD step info saved.")
 
@@ -264,9 +259,7 @@ class ExpArgs:
                         # will end the episode after saving the step info.
                         step_info.truncated = True
 
-                    step_info.save_step_info(
-                        self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
-                    )
+                    step_info.save_step_info(self.exp_dir)
                     logger.debug(f"Step info saved.")
 
                     _send_chat_info(env.unwrapped.chat, action, step_info.agent_info)
@@ -298,9 +291,7 @@ class ExpArgs:
         finally:
             try:
                 if step_info is not None:
-                    step_info.save_step_info(
-                        self.exp_dir, save_screenshot=self.save_screenshot, save_som=self.save_som
-                    )
+                    step_info.save_step_info(self.exp_dir)
             except Exception as e:
                 logger.error(f"Error while saving step info in the finally block: {e}")
             try:
@@ -490,22 +481,10 @@ class StepInfo:
 
         self.stats = stats
 
-    def save_step_info(self, exp_dir, save_json=False, save_screenshot=True, save_som=False):
+    def save_step_info(self, exp_dir, save_json=False):
 
         # special treatment for some of the observation fields
         if self.obs is not None:
-            # save screenshots to separate files
-            screenshot = self.obs.pop("screenshot", None)
-            screenshot_som = self.obs.pop("screenshot_som", None)
-
-            if save_screenshot and screenshot is not None:
-                img = Image.fromarray(screenshot)
-                img.save(exp_dir / f"screenshot_step_{self.step}.png")
-
-            if save_som and screenshot_som is not None:
-                img = Image.fromarray(screenshot_som)
-                img.save(exp_dir / f"screenshot_som_step_{self.step}.png")
-
             # save goal object (which might contain images) to a separate file to save space
             if self.obs.get("goal_object", False):
                 # save the goal object only once (goal should never change once setup)
@@ -522,14 +501,6 @@ class StepInfo:
         if save_json:
             with open(exp_dir / "steps_info.json", "w") as f:
                 json.dump(self, f, indent=4, cls=DataclassJSONEncoder)
-
-        if self.obs is not None:
-            # add the screenshots back to the obs
-            # why do we need this?
-            if screenshot is not None:
-                self.obs["screenshot"] = screenshot
-            if screenshot_som is not None:
-                self.obs["screenshot_som"] = screenshot_som
 
 
 def _extract_err_msg(episode_info: list[StepInfo]):
