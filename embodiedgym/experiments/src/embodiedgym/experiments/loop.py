@@ -33,7 +33,7 @@ from browsergym.experiments.loop import AbstractAgentArgs, save_package_versions
 from embodiedgym.alfworld.utils import load_config, load_prompts
 from embodiedgym.alfworld import ALFWORLD_VALID_SEEN, ALFWORLD_VALID_UNSEEN
 
-from embodiedgym.core.env import AlfworldEnv
+from embodiedgym.core.env import AlfworldEnv, OODAlfworldEnv
 
 logger = logging.getLogger(__name__)
 
@@ -42,27 +42,31 @@ SEED_MAX = 2 ^ 32  # arbitrary max value (exclusive), seems large enough
 
 @dataclass
 class AlfworldEnvArgs(DataClassJsonMixin):
-    config_path: str  # embodiedgym/alfworld/configs/base_config.yaml
-    prompts_path: str  # embodiedgym/alfworld/prompts/alfworld_multiturn_plan_first.json
-    valid_seen: bool = False
+    # config_path: str  # embodiedgym/alfworld/configs/base_config.yaml
+    # prompts_path: str  # embodiedgym/alfworld/prompts/alfworld_multiturn_plan_first.json
+    # valid_seen: bool = False
     task_name: int = 0
     max_step: int = 35
     wait_for_user_message: bool = False
     terminate_on_infeasible: bool = True
 
-    def make_env(self, ood_args: dict = {}):
-        if ood_args:  # TODO
-            pass
+    def make_env(
+        self,
+        ood_args: dict = None,
+    ):
+        if ood_args is not None:
+            assert ood_args["task_name"] == self.task_name
+            env = OODAlfworldEnv(
+                ood_args=ood_args,
+            )
         else:
             env = AlfworldEnv(
-                self.config_path,
-                self.valid_seen,
-                self.task_index,
-                self.max_step,
-                self.wait_for_user_message,
-                self.terminate_on_infeasible,
+                task_name=self.task_name,
+                max_step=self.max_step,
+                wait_for_user_message=self.wait_for_user_message,
+                terminate_on_infeasible=self.terminate_on_infeasible,
             )
-            return env
+        return env
 
 
 @dataclass
@@ -179,10 +183,7 @@ class ExpArgs:
             agent = self.agent_args.make_agent()
             logger.debug(f"Agent created.")
 
-            env = self.env_args.make_env(
-                action_mapping=agent.action_set.to_python_code,
-                exp_dir=self.exp_dir,
-            )
+            env = self.env_args.make_env()
 
             logger.debug(f"Environment created.")
 
@@ -195,15 +196,14 @@ class ExpArgs:
 
             if self.ood_args != None:
                 self.ood_done = False  # 用来跳出ood的episode
+            else:
+                self.ood_done = True
+
             while not step_info.is_done:  # when truncated or terminated, the episode is done
                 if (
-                    self.ood_args is not None
-                    and self.ood_args["ood_insert_step"] == step_info.step
-                    and not self.ood_done
+                    self.ood_args["ood_insert_step"] == step_info.step and not self.ood_done
                 ):  # simulate OOD observation step
                     ood_env = self.env_args.make_env(
-                        action_mapping=agent.action_set.to_python_code,
-                        exp_dir=self.exp_dir,
                         ood_args=self.ood_args,
                     )
                     logger.debug(f"OOD Environment created.")
@@ -213,7 +213,6 @@ class ExpArgs:
                     ood_step_info.from_reset_ood(
                         ood_env=ood_env,
                         id_env=env,
-                        seed=self.env_args.task_seed,
                         obs_preprocessor=agent.obs_preprocessor,
                     )
                     logger.debug(
@@ -234,10 +233,10 @@ class ExpArgs:
                         )
                         logger.debug(f"OOD step info saved.")
 
-                        _send_chat_info(
-                            ood_env.unwrapped.chat, ood_action, ood_step_info.agent_info
-                        )
-                        logger.debug(f"Chat info sent.")
+                        # _send_chat_info(
+                        #     ood_env.unwrapped.chat, ood_action, ood_step_info.agent_info
+                        # )
+                        # logger.debug(f"Chat info sent.")
 
                         if ood_action is None:
                             logger.debug(
@@ -252,6 +251,9 @@ class ExpArgs:
                         ood_step_info.from_step(
                             env=ood_env, action=ood_action, obs_preprocessor=agent.obs_preprocessor
                         )
+
+                        # break directly after the ood step since in Alfworld we only want one step ood and
+                        break
                     self.ood_done = True
                 else:  # normal step
                     logger.debug(f"Starting step {step_info.step}.")
@@ -446,12 +448,12 @@ class StepInfo:
             self.obs = obs_preprocessor(self.obs)
 
     def from_reset_ood(
-        self, ood_env: gym.Env, id_env: gym.Env, seed: int, obs_preprocessor: callable
+        self, ood_env: OODAlfworldEnv, id_env: AlfworldEnv, obs_preprocessor: callable
     ):
         t = self.profiling
         t.env_start = time.time()
         # TODO: reset a embodied ood env should use different logic
-        self.obs, env_info = ood_env.reset(seed=seed, options={"id_env": id_env})
+        self.obs, env_info = ood_env.reset(id_env=id_env)
         t.env_stop = time.time()
 
         t.action_exec_start = env_info.get("recording_start_time", t.env_start)

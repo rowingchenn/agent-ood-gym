@@ -1,0 +1,14 @@
+[
+    {
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-Pencil-None-Shelf-308/trial_T20190908_121952_610012/game.tw-pddl",
+        "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 10, a cabinet 9, a cabinet 8, a cabinet 7, a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 1, a diningtable 1, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
+        "task": "cool some pot and put it in diningtable",
+        "oracle": "go to diningtable 1 > take pot 1 from diningtable 1 > go to fridge 1 > cool pot 1 with fridge 1 > go to diningtable 1 > move pot 1 to diningtable 1",
+        "full_step_num": 6,
+        "ood_insert_step": 3,
+        "original_feedback": "You arrive at fridge 1. The fridge 1 is closed.",
+        "ood_feedback": "You arrive at fridge 1. The fridge 1 is closed. There is a girl standing at fridge 1.",
+        "ood_type": "task"
+    },
+    {}
+]

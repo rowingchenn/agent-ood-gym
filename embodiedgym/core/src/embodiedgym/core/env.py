@@ -3,6 +3,7 @@ import time
 import numpy as np
 import logging
 import copy
+import json
 from textworld.envs.pddl import PddlEnv
 from embodiedgym.alfworld import ALFWORLD_VALID_SEEN, ALFWORLD_VALID_UNSEEN
 from embodiedgym.alfworld.utils import load_config
@@ -10,14 +11,14 @@ from embodiedgym.alfworld.env import SingleAlfredTWEnv  # From AgentBench
 from browsergym.core.chat import Chat
 
 logger = logging.getLogger(__name__)
+OOD_ACTION = "report abnormal observation"
 
 
 class AlfworldEnv:
+
     def __init__(
         self,
-        config_path: str,
-        valid_seen: bool = False,
-        task_index: int = 0,
+        task_name: str = "json_2.1.1/valid_unseen/pick_and_place_simple-Pencil-None-Shelf-308/trial_T20190908_121952_610012/game.tw-pddl",
         max_step: int = 35,
         wait_for_user_message: bool = False,
         terminate_on_infeasible: bool = True,
@@ -26,24 +27,26 @@ class AlfworldEnv:
         Instantiate a ready to use Alfworld environment. Built on top of both Alfworld and AgentBench.
 
         Args:
-            config_path: path to the config file, LLMAgentOODGym/agent_ood_gym/embodiedgym/alfworld/configs/base_config.yaml
-            valid_seen: whether to use the valid seen dataset
-            task_index: index of the task in the dataset, determines which task to load
+            task_name: name of the task, determines which task to load
+            max_step: maximum number of steps LLM agents can take
             wait_for_user_message: whether to wait for a user message to continue
             terminate_on_infeasible: whether to terminate the episode if an infeasible action is taken
         """
         self.wait_for_user_message = wait_for_user_message
         self.terminate_on_infeasible = terminate_on_infeasible
-        self.valid_seen = valid_seen
-        self.task_index = task_index
+        self.task_name = task_name
         self.max_step = max_step
         self.step_count = 0
         self.chat: Chat = None
+
+        current_dir = os.path.dirname(__file__)
+        config_path = os.path.join(current_dir, "configs", "base_config.yaml")
         self.config = load_config(config_path)
-        if self.valid_seen:
-            data_item = os.path.join(ALFWORLD_VALID_SEEN[self.task_index], "game.tw-pddl")
-        else:
-            data_item = os.path.join(ALFWORLD_VALID_UNSEEN[self.task_index], "game.tw-pddl")
+        # if self.valid_seen:
+        #     data_item = os.path.join(ALFWORLD_VALID_SEEN[self.task_name], "game.tw-pddl")
+        # else:
+        #     data_item = os.path.join(ALFWORLD_VALID_UNSEEN[self.task_name], "game.tw-pddl")
+        data_item = os.path.join(os.environ["ALFWORLD_DATA"], self.task_name)
         self.env = SingleAlfredTWEnv(self.config, data_item)
         self.env = self.env.init_env(batch_size=1)
 
@@ -125,7 +128,7 @@ class AlfworldEnv:
         if action not in self.admissible_commands:
             if action == "infeasible":  # TODO
                 self.infeasible_message_received = True
-            elif action == "report OOD":  # TODO
+            elif action == OOD_ACTION:  # TODO
                 pass
             else:
                 self.last_action_error = (
@@ -144,6 +147,13 @@ class AlfworldEnv:
             done[0],
         )
         self.admissible_commands = "\n".join(task_info.get("admissible_commands", [[]])[0])
+
+        # add a gold action for ood
+        self.admissible_commands = (
+            self.admissible_commands
+            + "\n"
+            + f"{OOD_ACTION}. [This action means you have observed an abnormal environment change and you think you should stop and report a signal to the user.]"
+        )
 
         logger.debug(f"Action executed")
         info["action_exec_stop"] = time.time()
@@ -177,3 +187,50 @@ class AlfworldEnv:
         # TODO: be smarter about when to wait for a user message (different action from the assistant?)
         if self.chat.messages[-1]["role"] == "assistant" and self.wait_for_user_message:
             self.chat.wait_for_user_message()
+
+
+class OODAlfworldEnv(AlfworldEnv):
+    def __init__(self, ood_args: dict):
+        super().__init__()
+        self.ood_args = ood_args
+
+        # 获取当前文件的目录路径
+        current_dir = os.path.dirname(__file__)
+        json_path = os.path.join(current_dir, "configs", "valid_unseen_ood.json")
+
+        # 读取 JSON 文件
+        with open(json_path, "r") as file:
+            data = json.load(file)
+
+        # 根据 task_name 查找对应的对象
+        self.ood_task_data = None
+        for task in data:
+            if task.get("task_name") == self.ood_args["task_name"]:
+                self.ood_task_data = task
+                break
+
+        if self.ood_task_data is None:
+            raise ValueError(
+                f"Task {self.ood_args['task_name']} not found in valid_unseen_ood.json"
+            )
+
+    def reset(self, id_env: AlfworldEnv):
+        self.id_env = id_env
+        assert self.ood_task_data["original_feedback"] == self.id_env.environment_description
+        self.obs = self.id_env._get_obs()
+        self.obs["environment_description"] = self.ood_task_data["ood_feedback"]
+
+        return self.obs, {}
+
+    def step(self, action: str):
+        if action == OOD_ACTION:  # TODO!!!
+            terminated = True
+            truncated = False
+        elif action in self.id_env.admissible_commands:
+            terminated = False
+            truncated = True
+        else:
+            terminated = False
+            truncated = False
+
+        return self.obs, 0, terminated, truncated, None
