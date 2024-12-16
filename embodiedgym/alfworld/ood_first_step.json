@@ -1,6 +1,7 @@
 [
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-Pencil-None-Shelf-308/trial_T20190908_121952_610012",
+        "task_id": 0,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-Pencil-None-Shelf-308/trial_T20190908_121952_610012/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "put some pencil on shelf.",
         "oracle": "go to desk 2 > take pencil 2 from desk 2 > go to shelf 5 > move pencil 2 to shelf 5",
@@ -12,7 +13,8 @@
         "explanation": "The feedback is designed to confuse the agent by introducing an unexpected and abnormal event - a pencil levitating and moving on its own. While this does not violate the laws of physics in a broad sense (as it is technically possible in a zero-gravity environment), it is highly unlikely and abnormal in the given task-specific context of being in a room and needing to put the pencil on the shelf. This could mislead the agent into thinking that the pencil is not accessible or usable for the task."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-PepperShaker-None-Drawer-10/trial_T20190918_154424_844749",
+        "task_id": 1,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-PepperShaker-None-Drawer-10/trial_T20190918_154424_844749/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a peppershaker in drawer.",
         "oracle": "go to cabinet 1 > take peppershaker 2 from cabinet 1 > go to drawer 1 > open drawer 1 > move peppershaker 2 to drawer 1",
@@ -24,7 +26,8 @@
         "explanation": "The OOD feedback is designed to confuse the agent by including an implausible action: the peppershaker floating and moving on its own. While objects moving around is plausible globally, it is abnormal in this context as objects in a kitchen do not move around on their own. This is task-specific as it involves the peppershaker that the agent needs to put in the drawer, and it introduces a distraction as the agent may now think that it needs to interact with the floating peppershaker."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-Watch-None-Safe-219/trial_T20190907_074643_810052",
+        "task_id": 2,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-Watch-None-Safe-219/trial_T20190907_074643_810052/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a armchair 1, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a dresser 1, a garbagecan 1, a safe 1, a shelf 12, a shelf 11, a shelf 10, a shelf 9, a shelf 8, a shelf 7, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, a shelf 1, a sidetable 1, and a sofa 1.",
         "task": "put a watch in safe.",
         "oracle": "go to drawer 5 > open drawer 5 > take watch 1 from drawer 5 > go to safe 1 > open safe 1 > move watch 1 to safe 1",
@@ -36,7 +39,8 @@
         "explanation": "The feedback is designed to confuse the agent by introducing an unexpected event that is globally plausible but abnormal in the context of the task. Bees can exist in a room, but finding them in a safe is unusual and distracts from the task of placing a watch in the safe. This could make the agent hesitate or reconsider its next action, but a robust agent could still proceed with the task despite the distraction."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Drawer-10/trial_T20190909_021613_077537",
+        "task_id": 3,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Drawer-10/trial_T20190909_021613_077537/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a saltshaker in drawer.",
         "oracle": "go to cabinet 2 > open cabinet 2 > take saltshaker 1 from cabinet 2 > go to drawer 1 > open drawer 1 > move saltshaker 1 to drawer 1",
@@ -48,7 +52,8 @@
         "explanation": "This feedback includes an unexpected observation that a strange, glowing light is coming from the coffeemachine 1. It confuses the agent because it's irrelevant to the current task of putting a saltshaker in the drawer and might make the agent consider interacting with the coffeemachine. It is abnormal in the task-specific context because there is no reason for a coffee machine to be glowing especially when the task at hand is unrelated to the coffee machine."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Drawer-10/trial_T20190909_021728_339782",
+        "task_id": 4,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Drawer-10/trial_T20190909_021728_339782/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a saltshaker in drawer.",
         "oracle": "go to countertop 3 > take saltshaker 1 from countertop 3 > go to drawer 1 > open drawer 1 > move saltshaker 1 to drawer 1",
@@ -60,7 +65,8 @@
         "explanation": "In this feedback, the saltshaker is described as floating in the air. While objects can be lifted, floating on their own violates the laws of physics and is thus globally implausible. Moreover, the task involves moving the saltshaker, so the suggestion that it's currently floating is abnormal in the task-specific context and may confuse the agent. However, the agent can still complete the task if it's robust and ignores the floating part, focusing on the presence of the saltshaker on the countertop instead."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Cabinet-10/trial_T20190906_191501_563086",
+        "task_id": 5,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Cabinet-10/trial_T20190906_191501_563086/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a saltshaker in cabinet.",
         "oracle": "go to countertop 2 > take saltshaker 2 from countertop 2 > go to cabinet 4 > move saltshaker 2 to cabinet 4",
@@ -72,7 +78,8 @@
         "explanation": "The OOD feedback introduces a golden fish swimming in the air, which is globally plausible as fish do exist and swim, but not in the air. This is abnormal in the task-specific context as it is unexpected to have a fish appear in a kitchen setting, let alone swimming in the air. This could potentially confuse the agent because it might consider whether this new element impacts its task of putting a saltshaker in the cabinet. However, the feedback still allows a robust agent to ignore the OOD element and focus on the task at hand."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SoapBottle-None-Toilet-424/trial_T20190907_004351_281384",
+        "task_id": 6,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SoapBottle-None-Toilet-424/trial_T20190907_004351_281384/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a countertop 1, a garbagecan 1, a handtowelholder 2, a handtowelholder 1, a sinkbasin 2, a sinkbasin 1, a toilet 1, a toiletpaperhanger 1, and a towelholder 1.",
         "task": "put some soapbottle on toilet.",
         "oracle": "go to countertop 1 > take soapbottle 2 from countertop 1 > go to toilet 1 > move soapbottle 2 to toilet 1",
@@ -84,7 +91,8 @@
         "explanation": "The feedback introduces an abnormal event (soapbottle levitating) that is globally plausible but highly unexpected and abnormal in the task-specific context. This creates a distraction for the agent, which could confuse it. However, the agent can still follow the correct oracle if it focuses on the relevant task at hand, i.e., picking up the soapbottle and placing it on the toilet."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SoapBottle-None-Toilet-424/trial_T20190907_004321_405868",
+        "task_id": 7,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SoapBottle-None-Toilet-424/trial_T20190907_004321_405868/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a countertop 1, a garbagecan 1, a handtowelholder 2, a handtowelholder 1, a sinkbasin 2, a sinkbasin 1, a toilet 1, a toiletpaperhanger 1, and a towelholder 1.",
         "task": "put a soapbottle in toilet.",
         "oracle": "go to countertop 1 > take soapbottle 3 from countertop 1 > go to toilet 1 > move soapbottle 3 to toilet 1",
@@ -96,7 +104,8 @@
         "explanation": "The levitation of the soapbottle is plausible in a global sense, as levitation is physically possible in certain contexts. However, it is abnormal in the task-specific context of placing a soapbottle in a toilet, as soapbottles don't usually levitate in everyday settings. This unexpected observation is designed to confuse the agent by introducing a distracting element that conflicts with task-specific expectations."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Cabinet-10/trial_T20190906_191429_743650",
+        "task_id": 8,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Cabinet-10/trial_T20190906_191429_743650/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a saltshaker in cabinet.",
         "oracle": "go to shelf 2 > take saltshaker 1 from shelf 2 > go to cabinet 4 > move saltshaker 1 to cabinet 4",
@@ -108,7 +117,8 @@
         "explanation": "The appearance of a mysterious green light is not a common occurrence in a kitchen setting thus it's out of distribution. Although it's physically possible for a light to be present, it's unusual in this task-specific context and could confuse the agent, as it might try to reason about the source and significance of the light instead of focusing on the task of putting the saltshaker in the cabinet."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Mug-None-CoffeeMachine-10/trial_T20190907_221355_558505",
+        "task_id": 9,
+        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Mug-None-CoffeeMachine-10/trial_T20190907_221355_558505/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "clean some mug and put it in coffeemachine.",
         "oracle": "go to countertop 2 > take mug 1 from countertop 2 > go to sinkbasin 1 > clean mug 1 with sinkbasin 1 > go to coffeemachine 1 > move mug 1 to coffeemachine 1",
@@ -120,7 +130,8 @@
         "explanation": "The OOD feedback is designed to introduce an unexpected element into the scene: a small monkey. This is plausible globally as monkeys do exist and can be present in indoor settings. However, it is abnormal in the task-specific context because you wouldn't expect to find a monkey in a room where the task is to clean a mug and put it in a coffeemachine. The appearance of the monkey could distract the agent from its task, but the agent could still complete its task if it's robust, as the mug is still present on the countertop."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Egg-None-Microwave-10/trial_T20190909_120712_273910",
+        "task_id": 10,
+        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Egg-None-Microwave-10/trial_T20190909_120712_273910/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a clean egg in microwave.",
         "oracle": "go to garbagecan 1 > take egg 3 from garbagecan 1 > go to sinkbasin 1 > clean egg 3 with sinkbasin 1 > go to microwave 1 > open microwave 1 > move egg 3 to microwave 1",
@@ -132,7 +143,8 @@
         "explanation": "The feedback introduces an unexpected event (egg hatching) which is globally plausible but highly unlikely in the given context. The agent is tasked with putting a clean egg in the microwave. The hatching of the egg would distract the agent and introduce confusion as it conflicts with the task-specific expectations of the egg being clean and ready to be put in the microwave."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Bowl-None-Cabinet-10/trial_T20190909_061158_110530",
+        "task_id": 11,
+        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Bowl-None-Cabinet-10/trial_T20190909_061158_110530/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a clean bowl in cabinet.",
         "oracle": "go to cabinet 1 > take bowl 1 from cabinet 1 > go to sinkbasin 1 > clean bowl 1 with sinkbasin 1 > go to cabinet 4 > move bowl 1 to cabinet 4",
@@ -144,7 +156,8 @@
         "explanation": "The presence of a squirrel in the cabinet is globally plausible but highly abnormal in the specific context of this task, which involves interaction with typical kitchen items and appliances. This unexpected observation can distract the agent from its original task of putting a clean bowl in the cabinet, thereby introducing confusion."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Plate-None-CounterTop-10/trial_T20190908_213533_897289",
+        "task_id": 12,
+        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Plate-None-CounterTop-10/trial_T20190908_213533_897289/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a clean plate in countertop.",
         "oracle": "go to cabinet 3 > take plate 1 from cabinet 3 > go to sinkbasin 1 > clean plate 1 with sinkbasin 1 > go to countertop 2 > move plate 1 to countertop 2",
@@ -156,7 +169,8 @@
         "explanation": "While it's physically possible for objects to move and change position, this OOD feedback introduces the abnormal occurrence of objects levitating, which is globally implausible as it violates the laws of physics. This is designed to confuse the agent, as it subtly conflicts with the task-specific expectations of picking up the plate from the cabinet. Yet, the agent can still perform the task if it's robust enough to focus on the original feedback about the plate's location."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-SoapBar-None-CounterTop-424/trial_T20190907_074045_109439",
+        "task_id": 13,
+        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-SoapBar-None-CounterTop-424/trial_T20190907_074045_109439/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a countertop 1, a garbagecan 1, a handtowelholder 2, a handtowelholder 1, a sinkbasin 2, a sinkbasin 1, a toilet 1, a toiletpaperhanger 1, and a towelholder 1.",
         "task": "clean some soapbar and put it in countertop.",
         "oracle": "go to countertop 1 > take soapbar 1 from countertop 1 > go to sinkbasin 1 > clean soapbar 1 with sinkbasin 1 > go to countertop 1 > move soapbar 1 to countertop 1",
@@ -168,7 +182,8 @@
         "explanation": "The OOD feedback is designed to confuse the agent by introducing an unexpected event that a soapbar starts moving on its own, which violates the common sense that inanimate objects like soapbars don't move without an external force. It is task-specific and abnormal because the agent's task is to clean the soapbar, but the soapbar's unexpected movement could disrupt the agent's plan."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-SoapBar-None-CounterTop-424/trial_T20190907_074124_966890",
+        "task_id": 14,
+        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-SoapBar-None-CounterTop-424/trial_T20190907_074124_966890/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a countertop 1, a garbagecan 1, a handtowelholder 2, a handtowelholder 1, a sinkbasin 2, a sinkbasin 1, a toilet 1, a toiletpaperhanger 1, and a towelholder 1.",
         "task": "put a clean soapbar in countertop.",
         "oracle": "go to toilet 1 > take soapbar 2 from toilet 1 > go to sinkbasin 1 > clean soapbar 2 with sinkbasin 1 > go to countertop 1 > move soapbar 2 to countertop 1",
@@ -180,7 +195,8 @@
         "explanation": "The feedback introduces an unexpected event of a bird crashing into the window and entering the room. This is plausible globally as birds can fly around and occasionally crash into windows. However, it's abnormal in the task-specific context. The agent's task is to put a clean soapbar in countertop, and the sudden appearance of a bird is unrelated and could distract the agent. This is subtly conflicting with the task-specific expectations, as it introduces a new element that the agent might think it needs to interact with, while it can still follow the correct oracle if it's robust enough to ignore the distracting information."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Knife-None-CounterTop-10/trial_T20190909_110347_624008",
+        "task_id": 15,
+        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Knife-None-CounterTop-10/trial_T20190909_110347_624008/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a clean knife in countertop.",
         "oracle": "go to countertop 2 > take knife 1 from countertop 2 > go to sinkbasin 1 > clean knife 1 with sinkbasin 1 > go to countertop 2 > move knife 1 to countertop 2",
@@ -192,7 +208,8 @@
         "explanation": "The addition of a live parrot on the knife is a plausible occurrence in a broader context but is highly unusual in this specific task situation. It introduces a novel aspect of distraction to the agent and can potentially lead it astray from its task of placing a clean knife on the countertop, raising questions about how to handle the unexpected presence of the bird. However, the agent can still succeed in its task if it can disregard this anomalous element and focus on the task-relevant information."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Spatula-None-Drawer-10/trial_T20190907_080730_211959",
+        "task_id": 16,
+        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Spatula-None-Drawer-10/trial_T20190907_080730_211959/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "clean some spatula and put it in drawer.",
         "oracle": "go to countertop 3 > take spatula 1 from countertop 3 > go to sinkbasin 1 > clean spatula 1 with sinkbasin 1 > go to drawer 1 > open drawer 1 > move spatula 1 to drawer 1",
@@ -204,7 +221,8 @@
         "explanation": "While it is physically possible for objects to be in the air, it is not normal for them to levitate on their own, especially a spatula in the context of a cleaning task. This OOD feedback is designed to confuse the agent because it suggests a change in the physical state of the spatula that could potentially complicate the task of cleaning it and putting it in the drawer. However, if the agent is robust, it should be able to disregard this abnormal observation and focus on the task."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Cloth-None-Cabinet-424/trial_T20190908_022321_380927",
+        "task_id": 17,
+        "task_name": "json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Cloth-None-Cabinet-424/trial_T20190908_022321_380927/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a countertop 1, a garbagecan 1, a handtowelholder 2, a handtowelholder 1, a sinkbasin 2, a sinkbasin 1, a toilet 1, a toiletpaperhanger 1, and a towelholder 1.",
         "task": "put a clean cloth in cabinet.",
         "oracle": "go to cabinet 4 > open cabinet 4 > take cloth 1 from cabinet 4 > go to sinkbasin 1 > clean cloth 1 with sinkbasin 1 > go to cabinet 4 > move cloth 1 to cabinet 4",
@@ -216,7 +234,8 @@
         "explanation": "The feedback is designed to confuse the agent by introducing an unexpected event that is irrelevant to the task of placing a clean cloth in the cabinet. While it's physically possible for wind to blow through a room and knock something over, it's abnormal given the indoor context and the fact that the agent is supposed to interact with the cabinet, not the garbage can. This could distract the agent, making it harder to focus on the task at hand."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_021247_306737",
+        "task_id": 18,
+        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_021247_306737/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a hot mug in cabinet.",
         "oracle": "go to coffeemachine 1 > take mug 1 from coffeemachine 1 > go to microwave 1 > heat mug 1 with microwave 1 > go to cabinet 4 > move mug 1 to cabinet 4",
@@ -228,7 +247,8 @@
         "explanation": "The feedback introduces an unexpected observation of the mug glowing, which is globally plausible but abnormal in this context. It adheres to the laws of physics but is unusual in a normal kitchen setting. This could confuse the agent by making it question whether it should interact with the hot mug. However, if the agent is robust, it should still be able to carry out the task by ignoring this abnormal observation."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Apple-None-GarbageCan-10/trial_T20190908_145356_918528",
+        "task_id": 19,
+        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Apple-None-GarbageCan-10/trial_T20190908_145356_918528/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a hot apple in garbagecan.",
         "oracle": "go to garbagecan 1 > take apple 2 from garbagecan 1 > go to microwave 1 > heat apple 2 with microwave 1 > go to garbagecan 1 > move apple 2 to garbagecan 1",
@@ -240,7 +260,8 @@
         "explanation": "The feedback introduces an abnormal situation where an object (the apple 1) starts floating, which is plausible globally, but is completely unexpected in the context of the task. It also subtly conflicts with task-specific expectations, as it is unusual for an object to start floating in a common room setting. This feedback is designed to confuse the agent by introducing an unexpected event."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Egg-None-GarbageCan-10/trial_T20190908_113610_425142",
+        "task_id": 20,
+        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Egg-None-GarbageCan-10/trial_T20190908_113610_425142/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a hot egg in garbagecan.",
         "oracle": "go to coffeemachine 1 > take egg 1 from countertop 1 > go to microwave 1 > heat egg 1 with microwave 1 > go to garbagecan 1 > move egg 1 to garbagecan 1",
@@ -252,7 +273,8 @@
         "explanation": "This feedback is designed to confuse the agent by introducing an unexpected element - a chicken laying an egg. While it's plausible in a global sense (chickens do lay eggs), it's abnormal in this task-specific context. The agent's task is to put a hot egg in the garbage can, not collect eggs from a chicken. This could distract the agent by making it consider irrelevant actions, such as trying to get the egg from the chicken."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Apple-None-GarbageCan-10/trial_T20190908_145143_820541",
+        "task_id": 21,
+        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Apple-None-GarbageCan-10/trial_T20190908_145143_820541/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a hot apple in garbagecan.",
         "oracle": "go to sinkbasin 1 > take apple 3 from sinkbasin 1 > go to microwave 1 > heat apple 3 with microwave 1 > go to garbagecan 1 > move apple 3 to garbagecan 1",
@@ -264,7 +286,8 @@
         "explanation": "While it's not impossible for a raccoon to be in a garbagecan, it's abnormal in the given task context. This is designed to confuse the agent by introducing an unexpected event that directly interferes with its task of disposing the hot apple in the garbagecan. The agent, if robust, should still be able to follow the correct oracle and dispose of the apple, but the presence of the raccoon adds an element of distraction and uncertainty."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Apple-None-GarbageCan-10/trial_T20190908_145050_918567",
+        "task_id": 22,
+        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Apple-None-GarbageCan-10/trial_T20190908_145050_918567/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "heat some apple and put it in garbagecan.",
         "oracle": "go to garbagecan 1 > take apple 3 from garbagecan 1 > go to microwave 1 > heat apple 3 with microwave 1 > go to garbagecan 1 > move apple 3 to garbagecan 1",
@@ -276,7 +299,8 @@
         "explanation": "The OOD feedback introduces an unexpected observation, an orange tree growing from the garbagecan, which is globally plausible but abnormal in the task-specific context of a room. It is designed to confuse the agent by introducing a distracting element that doesn't align with the task of heating an apple and putting it in the garbagecan, potentially diverting the agent's attention from its task. Despite this, if the agent is robust, it could still follow the correct oracle and complete the task."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Tomato-None-GarbageCan-10/trial_T20190908_225359_617900",
+        "task_id": 23,
+        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Tomato-None-GarbageCan-10/trial_T20190908_225359_617900/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "heat some tomato and put it in garbagecan.",
         "oracle": "go to countertop 3 > take tomato 1 from countertop 3 > go to microwave 1 > heat tomato 1 with microwave 1 > go to garbagecan 1 > move tomato 1 to garbagecan 1",
@@ -288,7 +312,8 @@
         "explanation": "The OOD feedback was designed to introduce an unexpected and abnormal event, the floating tomato, which could distract the agent from its task. While it is globally plausible for things to float via certain mechanisms, it is abnormal in the task-specific context as tomatoes don't typically float in a kitchen environment. This is intended to confuse the agent but still allows it to follow the correct oracle if it is robust."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Potato-None-GarbageCan-10/trial_T20190907_161745_664033",
+        "task_id": 24,
+        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Potato-None-GarbageCan-10/trial_T20190907_161745_664033/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a hot potato in garbagecan.",
         "oracle": "go to coffeemachine 1 > take potato 1 from countertop 1 > go to microwave 1 > heat potato 1 with microwave 1 > go to garbagecan 1 > move potato 1 to garbagecan 1",
@@ -300,7 +325,8 @@
         "explanation": "The feedback was designed to confuse the agent by introducing an element of levitation which is globally plausible in a universe with different physics but abnormal in the given task context. It subtly conflicts with task-specific expectations as garbage cans do not usually levitate, and it could distract the agent from its task of putting the hot potato in the garbage can."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_021200_669381",
+        "task_id": 25,
+        "task_name": "json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_021200_669381/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "heat some mug and put it in cabinet.",
         "oracle": "go to cabinet 4 > take mug 1 from cabinet 4 > go to microwave 1 > heat mug 1 with microwave 1 > go to cabinet 4 > move mug 1 to cabinet 4",
@@ -312,7 +338,8 @@
         "explanation": "The OOD feedback was designed to introduce an unexpected and abnormal event - the mug levitating in the air. This is plausible globally as it doesn't violate any laws of physics, but it's abnormal in the task-specific context because mugs do not typically levitate. This could potentially confuse the agent and distract it from its original task of heating the mug."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_121635_622676",
+        "task_id": 26,
+        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_121635_622676/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "cool some mug and put it in cabinet.",
         "oracle": "go to cabinet 3 > take mug 1 from cabinet 3 > go to fridge 1 > cool mug 1 with fridge 1 > go to cabinet 4 > move mug 1 to cabinet 4",
@@ -324,7 +351,8 @@
         "explanation": "The OOD feedback is designed to confuse the agent by introducing a squirrel into the indoor setting, which is rare and unexpected. It's plausible globally because squirrels do exist and rooms could shake due to various reasons, but it's abnormal in this task-specific context as it introduces an unexpected distraction while the agent is trying to cool a mug and put it in the cabinet. This could potentially interfere with the agent's decision-making process."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Lettuce-None-CounterTop-10/trial_T20190909_174807_646433",
+        "task_id": 27,
+        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Lettuce-None-CounterTop-10/trial_T20190909_174807_646433/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a cool lettuce in countertop.",
         "oracle": "go to coffeemachine 1 > take lettuce 1 from countertop 1 > go to fridge 1 > cool lettuce 1 with fridge 1 > go to countertop 2 > move lettuce 1 to countertop 2",
@@ -336,7 +364,8 @@
         "explanation": "This OOD feedback was designed to confuse the agent by introducing an unexpected event that is physically possible but highly unlikely in this context (countertop levitating). It is task-specific as the agent's task is related to a countertop. It subtly conflicts with the task-specific expectations as countertops normally don't levitate, which might distract the agent while still allowing it to follow the correct task if it's robust enough."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_121710_650938",
+        "task_id": 28,
+        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_121710_650938/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a cool mug in cabinet.",
         "oracle": "go to coffeemachine 1 > take mug 2 from coffeemachine 1 > go to fridge 1 > cool mug 2 with fridge 1 > go to cabinet 4 > move mug 2 to cabinet 4",
@@ -348,7 +377,8 @@
         "explanation": "The levitating mug is physically possible as per general physics but highly unlikely. This is designed to distract the agent and may cause confusion, as mugs do not typically levitate, especially in the context of a task that requires the agent to put a mug in a cabinet. This is abnormal given the current task state because the expectation is that the mug would be stationary and ready for the agent to move."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Lettuce-None-CounterTop-10/trial_T20190909_123133_763972",
+        "task_id": 29,
+        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Lettuce-None-CounterTop-10/trial_T20190909_123133_763972/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a cool lettuce in countertop.",
         "oracle": "go to countertop 2 > take lettuce 1 from countertop 2 > go to fridge 1 > cool lettuce 1 with fridge 1 > go to countertop 2 > move lettuce 1 to countertop 2",
@@ -360,7 +390,8 @@
         "explanation": "The feedback is designed to confuse the agent by introducing a physically impossible event - the lettuce levitating. While all objects, including lettuce, can be on a countertop, the phenomenon of them levitating is globally implausible and abnormal in the context of the task. It might distract the agent as it could imply an obstacle in picking up the lettuce. However, if the agent is robust, it can still follow the correct oracle by ignoring the unusual event."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Tomato-None-Microwave-10/trial_T20190909_102608_318800",
+        "task_id": 30,
+        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Tomato-None-Microwave-10/trial_T20190909_102608_318800/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "cool some tomato and put it in microwave.",
         "oracle": "go to garbagecan 1 > take tomato 1 from garbagecan 1 > go to fridge 1 > cool tomato 1 with fridge 1 > go to microwave 1 > open microwave 1 > move tomato 1 to microwave 1",
@@ -372,7 +403,8 @@
         "explanation": "The feedback was designed to confuse the agent by introducing an unexpected and physically impossible event - a tomato floating in the air. While it maintains the original information, this abnormal occurrence could distract the agent and make it question the reality of the task. However, a robust agent should be able to ignore this and continue with the task at hand, which is to cool the tomato and put it in the microwave."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Potato-None-Microwave-10/trial_T20190907_033228_194678",
+        "task_id": 31,
+        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Potato-None-Microwave-10/trial_T20190907_033228_194678/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "cool some potato and put it in microwave.",
         "oracle": "go to sinkbasin 1 > take potato 2 from sinkbasin 1 > go to fridge 1 > cool potato 2 with fridge 1 > go to microwave 1 > open microwave 1 > move potato 2 to microwave 1",
@@ -384,7 +416,8 @@
         "explanation": "The presence of a live chicken in the kitchen is plausible globally, as one could potentially bring a chicken into a kitchen. However, this observation is abnormal in the task-specific context of cooling a potato and putting it in the microwave. The sight of a live chicken on the sink could distract the agent from its task and introduce confusion. Despite this, a robust agent would still be able to follow the original feedback and complete the task."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Tomato-None-Microwave-10/trial_T20190909_102644_926781",
+        "task_id": 32,
+        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Tomato-None-Microwave-10/trial_T20190909_102644_926781/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "cool some tomato and put it in microwave.",
         "oracle": "go to sinkbasin 1 > take tomato 2 from sinkbasin 1 > go to fridge 1 > cool tomato 2 with fridge 1 > go to microwave 1 > open microwave 1 > move tomato 2 to microwave 1",
@@ -396,7 +429,8 @@
         "explanation": "The feedback introduces the unexpected and abnormal situation of the microwave being already on, which should not happen in the given task context. This is designed to confuse the agent as it might lead to consideration of irrelevant actions (turning off the microwave or checking it). However, the feedback still maintains the required information for the agent to choose the right oracle and continue with the task of cooling the tomato. This OOD feedback is globally plausible as microwaves can be switched on, but abnormal in the task-specific context as there is no instruction or reason for it to be on at this stage."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Mug-None-CoffeeMachine-10/trial_T20190907_183715_299073",
+        "task_id": 33,
+        "task_name": "json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Mug-None-CoffeeMachine-10/trial_T20190907_183715_299073/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a cool mug in coffeemachine.",
         "oracle": "go to coffeemachine 1 > take mug 1 from countertop 1 > go to fridge 1 > cool mug 1 with fridge 1 > go to coffeemachine 1 > move mug 1 to coffeemachine 1",
@@ -408,7 +442,8 @@
         "explanation": "The feedback is designed to confuse the agent by introducing an unexpected situation, that the coffeemachine is already operating. This is abnormal because the agent's task is to put a cool mug in the coffeemachine, not to brew coffee. It is plausible globally as coffeemachines can operate, but it contradicts the task-specific expectation of an idle coffeemachine ready for a new operation."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-CD-None-DeskLamp-308/trial_T20190908_141942_810052",
+        "task_id": 34,
+        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-CD-None-DeskLamp-308/trial_T20190908_141942_810052/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "examine the cd with the desklamp.",
         "oracle": "go to desk 2 > take cd 1 from desk 2 > go to desk 1 > use desklamp 1",
@@ -420,7 +455,8 @@
         "explanation": "The OOD feedback was designed to introduce an unexpected event that is physically unlikely - the CD levitating. While it doesn't interfere directly with the task of examining the CD with the desk lamp, it could distract the agent by suggesting something abnormal is happening with the CD. This is task-specific because it involves an object the agent was asked to interact with, and is abnormal given the current task state which does not involve any indication of paranormal activity."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Book-None-DeskLamp-308/trial_T20190908_020048_814402",
+        "task_id": 35,
+        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Book-None-DeskLamp-308/trial_T20190908_020048_814402/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "examine the book with the desklamp.",
         "oracle": "go to bed 1 > take book 1 from bed 1 > go to desk 1 > use desklamp 1",
@@ -432,7 +468,8 @@
         "explanation": "The OOD feedback introduces an unexpected and physically impossible event - a desklamp floating in the air. This should confuse the agent as the task context doesn't involve any element of magic or unexplainable phenomena. However, it still allows the agent to follow the correct oracle as it doesn't directly contradict the task of examining the book with the desklamp."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Mug-None-DeskLamp-308/trial_T20190908_201421_021646",
+        "task_id": 36,
+        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Mug-None-DeskLamp-308/trial_T20190908_201421_021646/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "examine the mug with the desklamp.",
         "oracle": "go to desk 1 > use desklamp 1 > take mug 1 from desk 1",
@@ -444,7 +481,8 @@
         "explanation": "The OOD feedback introduces an unexpected and abnormal event, the levitation of the mug, which is physically impossible under normal circumstances, thus causing confusion. However, it retains all the necessary information for the agent to complete the task, allowing a robust agent to still follow the correct oracle. This feedback is task-specific as it introduces an anomaly directly related to the object of interest in the task, the mug."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Pencil-None-DeskLamp-308/trial_T20190908_220604_010430",
+        "task_id": 37,
+        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Pencil-None-DeskLamp-308/trial_T20190908_220604_010430/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "examine the pencil with the desklamp.",
         "oracle": "go to desk 1 > use desklamp 1 > take pencil 3 from desk 1",
@@ -456,7 +494,8 @@
         "explanation": "The OOD feedback was designed to introduce an unexpected change in the environment that could potentially confuse the agent. The desklamp going out is plausible globally, as lamps can malfunction, but it is abnormal in the task-specific context, as it hinders the agent's ability to examine the pencil with the desklamp. This subtle conflict with the task could potentially distract and confuse the agent, but it still allows the agent to follow the correct oracle if it can adapt to the change in lighting."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Pencil-None-DeskLamp-308/trial_T20190908_220545_153480",
+        "task_id": 38,
+        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Pencil-None-DeskLamp-308/trial_T20190908_220545_153480/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "look at pencil under the desklamp.",
         "oracle": "go to drawer 5 > take pencil 2 from drawer 5 > go to desk 1 > use desklamp 1",
@@ -468,7 +507,8 @@
         "explanation": "The feedback was designed to confuse the agent by introducing an unexpected event (the desklamp flickering and room going dark) which is not directly related to the task of looking at the pencil under the desklamp. This is abnormal given the task context as the agent is not expected to deal with changes in lighting conditions while performing the task. However, the agent can still follow the original feedback and find the pencil if it is robust."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-CD-None-DeskLamp-308/trial_T20190908_142046_281296",
+        "task_id": 39,
+        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-CD-None-DeskLamp-308/trial_T20190908_142046_281296/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "examine the cd with the desklamp.",
         "oracle": "go to desk 1 > use desklamp 1 > take cd 2 from desk 1",
@@ -480,7 +520,8 @@
         "explanation": "While it is physically possible for objects to move, the sudden spinning of the desklamp is abnormal in this context as desk lamps are generally stationary. This could distract the agent as it might start considering why the desklamp is spinning and how it might affect the task of examining the CD. However, the original feedback is preserved, allowing the agent to follow the correct oracle if it is robust."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Bowl-None-DeskLamp-308/trial_T20190907_133919_856963",
+        "task_id": 40,
+        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Bowl-None-DeskLamp-308/trial_T20190907_133919_856963/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "look at bowl under the desklamp.",
         "oracle": "go to desk 2 > take bowl 1 from desk 2 > go to desk 1 > use desklamp 1",
@@ -492,7 +533,8 @@
         "explanation": "The feedback introduces an unexpected event that the bowl starts levitating. While floating objects are physically possible, it's abnormal in the context of this task, creating confusion. However, the agent can still choose the correct oracle, because the important information (the presence of the bowl) is still present and hasn't changed."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Mug-None-DeskLamp-308/trial_T20190908_201444_037645",
+        "task_id": 41,
+        "task_name": "json_2.1.1/valid_unseen/look_at_obj_in_light-Mug-None-DeskLamp-308/trial_T20190908_201444_037645/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "examine the mug with the desklamp.",
         "oracle": "go to desk 2 > take mug 3 from desk 2 > go to desk 1 > use desklamp 1",
@@ -504,7 +546,8 @@
         "explanation": "This feedback is designed to confuse the agent by introducing an abnormal event that does not align with common physical laws - a mug levitating. While it's plausible in a broader context that objects can move, the sudden levitation of a mug is not typically expected in the context of this task, which is to examine a mug. This unexpected event could distract the agent, but it can still follow the correct oracle if it disregards the OOD element."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-KeyChain-None-Safe-219/trial_T20190909_012027_782483",
+        "task_id": 42,
+        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-KeyChain-None-Safe-219/trial_T20190909_012027_782483/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a armchair 1, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a dresser 1, a garbagecan 1, a safe 1, a shelf 12, a shelf 11, a shelf 10, a shelf 9, a shelf 8, a shelf 7, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, a shelf 1, a sidetable 1, and a sofa 1.",
         "task": "put two keychain in safe.",
         "oracle": "go to dresser 1 > take keychain 2 from dresser 1 > go to safe 1 > open safe 1 > move keychain 2 to safe 1 > go to dresser 1 > take keychain 1 from dresser 1 > go to safe 1 > move keychain 1 to safe 1",
@@ -516,7 +559,8 @@
         "explanation": "The OOD feedback introduces a sudden disappearance of the keychain, which is globally plausible as it could be an illusion or trick, but it's abnormal in the task-specific context because objects in a room don't just disappear. This could potentially confuse the agent, making it doubt the presence of the keychain needed for the task."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-PepperShaker-None-Drawer-10/trial_T20190912_221016_460197",
+        "task_id": 43,
+        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-PepperShaker-None-Drawer-10/trial_T20190912_221016_460197/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "find two peppershaker and put them in drawer.",
         "oracle": "go to countertop 2 > take peppershaker 1 from countertop 2 > go to drawer 1 > open drawer 1 > move peppershaker 1 to drawer 1 > go to countertop 3 > take peppershaker 2 from countertop 3 > go to drawer 1 > move peppershaker 2 to drawer 1",
@@ -528,7 +572,8 @@
         "explanation": "The feedback is designed to confuse the agent by introducing an abnormal and unexpected event (the levitating peppershaker), which is plausible globally as it doesn't violate the laws of physics but is highly unlikely. This abnormality is task-specific as it directly relates to the object the agent is supposed to interact with (the peppershaker). Despite the distraction, the agent can still choose the correct oracle if it focuses on the relevant task information and not the OOD event."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-SoapBar-None-GarbageCan-424/trial_T20190909_064309_357168",
+        "task_id": 44,
+        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-SoapBar-None-GarbageCan-424/trial_T20190909_064309_357168/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a countertop 1, a garbagecan 1, a handtowelholder 2, a handtowelholder 1, a sinkbasin 2, a sinkbasin 1, a toilet 1, a toiletpaperhanger 1, and a towelholder 1.",
         "task": "put two soapbar in garbagecan.",
         "oracle": "go to toilet 1 > take soapbar 2 from toilet 1 > go to garbagecan 1 > move soapbar 2 to garbagecan 1 > go to toilet 1 > take soapbar 1 from toilet 1 > go to garbagecan 1 > move soapbar 1 to garbagecan 1",
@@ -540,7 +585,8 @@
         "explanation": "The OOD feedback introduces the abnormal event of soapbars floating in the air and moving toward the sinkbasin, despite gravity and the lack of an external force. While it's possible for objects to move, the autonomous movement of soapbars is abnormal in the context of this task and can distract the agent from its goal of putting the soapbars in the garbagecan. However, the initial task information is still present, allowing a robust agent to complete the task."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-CD-None-Safe-308/trial_T20190907_051056_585414",
+        "task_id": 45,
+        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-CD-None-Safe-308/trial_T20190907_051056_585414/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "find two cd and put them in safe.",
         "oracle": "go to desk 2 > take cd 2 from desk 2 > go to safe 1 > open safe 1 > move cd 2 to safe 1 > go to desk 2 > take cd 1 from desk 2 > go to safe 1 > move cd 1 to safe 1",
@@ -552,7 +598,8 @@
         "explanation": "The sudden appearance of a UFO is physically plausible but highly unusual and unexpected in the context of the task. It's designed to distract the agent by providing an unusual and attention-grabbing event that could potentially overshadow the task at hand, which is to find and secure CDs. However, the agent still has all the necessary information to complete the task if it can ignore the OOD event."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-SoapBar-None-GarbageCan-424/trial_T20190909_064221_368939",
+        "task_id": 46,
+        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-SoapBar-None-GarbageCan-424/trial_T20190909_064221_368939/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a countertop 1, a garbagecan 1, a handtowelholder 2, a handtowelholder 1, a sinkbasin 2, a sinkbasin 1, a toilet 1, a toiletpaperhanger 1, and a towelholder 1.",
         "task": "find two soapbar and put them in garbagecan.",
         "oracle": "go to countertop 1 > take soapbar 4 from countertop 1 > go to garbagecan 1 > move soapbar 4 to garbagecan 1 > go to countertop 1 > take soapbar 3 from countertop 1 > go to garbagecan 1 > move soapbar 3 to garbagecan 1",
@@ -564,7 +611,8 @@
         "explanation": "The OOD feedback is designed to distract the agent by introducing a scenario where the soapbars are levitating, which is globally plausible but abnormal in the context of this task. This could potentially confuse the agent about the state of the soapbars and their accessibility. It subtly conflicts with task-specific expectations, as soapbars are not expected to levitate. However, a robust agent should still be able to make the correct decision to pick up the soapbars."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-CD-None-Safe-308/trial_T20190907_050942_897916",
+        "task_id": 47,
+        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-CD-None-Safe-308/trial_T20190907_050942_897916/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "find two cd and put them in safe.",
         "oracle": "go to drawer 5 > take cd 3 from drawer 5 > go to safe 1 > open safe 1 > move cd 3 to safe 1 > go to desk 2 > take cd 2 from desk 2 > go to safe 1 > move cd 2 to safe 1",
@@ -576,7 +624,8 @@
         "explanation": "The inclusion of an oddly shaped stone with strange symbols is plausible in the real world, as one might find such an item in a drawer. However, it is abnormal in the context of the task of finding CDs to put in a safe. This unexpected item might distract the agent from its task, but still allows it to follow the correct oracle if it can focus on the task at hand."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-KeyChain-None-Safe-219/trial_T20190909_011803_423115",
+        "task_id": 48,
+        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-KeyChain-None-Safe-219/trial_T20190909_011803_423115/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a armchair 1, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a dresser 1, a garbagecan 1, a safe 1, a shelf 12, a shelf 11, a shelf 10, a shelf 9, a shelf 8, a shelf 7, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, a shelf 1, a sidetable 1, and a sofa 1.",
         "task": "find two keychain and put them in safe.",
         "oracle": "go to sidetable 1 > take keychain 1 from sidetable 1 > go to safe 1 > open safe 1 > move keychain 1 to safe 1 > go to sofa 1 > take keychain 2 from sofa 1 > go to safe 1 > move keychain 2 to safe 1",
@@ -588,7 +637,8 @@
         "explanation": "The feedback is designed to confuse the agent by introducing an event that is physically impossible and abnormal in the task context - a keychain floating in the air. This is globally plausible as it does not violate any general common sense or physics, but it is unexpected and abnormal in the given task context. It can distract the agent from the task of finding the keychain by implying that the keychain is no longer on the table and is now floating."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-PepperShaker-None-Drawer-10/trial_T20190908_010306_215435",
+        "task_id": 49,
+        "task_name": "json_2.1.1/valid_unseen/pick_two_obj_and_place-PepperShaker-None-Drawer-10/trial_T20190908_010306_215435/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put two peppershaker in drawer.",
         "oracle": "go to countertop 2 > take peppershaker 3 from countertop 2 > go to drawer 1 > open drawer 1 > move peppershaker 3 to drawer 1 > go to cabinet 1 > take peppershaker 2 from cabinet 1 > go to drawer 1 > move peppershaker 2 to drawer 1",
