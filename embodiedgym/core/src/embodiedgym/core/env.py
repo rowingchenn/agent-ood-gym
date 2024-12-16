@@ -62,7 +62,7 @@ class AlfworldEnv:
         # obs: Text observations, i.e. command's feedback.
         # infos: Information requested when creating the environments.
         self.ob, self.task_info = self.env.reset()
-
+        ob = "\n".join(ob[0].split("\n\n")[1:])
         self.ob = self.ob.split("Your task is to: ")
         self.goal_object = self.ob[1]
         self.environment_description = self.ob[0]
