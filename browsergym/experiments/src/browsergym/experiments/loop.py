@@ -670,16 +670,18 @@ def _save_summary_info(
     for key, val in _aggregate_episode_stats(episode_info).items():
         summary_info[f"stats.{key}"] = val
 
-    if len(episode_info) > 0:
-        summary_info["terminated"] = episode_info[-1].terminated
-        summary_info["truncated"] = episode_info[-1].truncated
-
-    # Additional OOD processing
-    # if ood_teriminated is True, it means the ood task is validated by the agent
-    # if ood_truncated is True, it means the agent failed to validate the ood task and reached the maximum number of steps or failed to parse actiopns in the OOD environment.
+    # Separate steps into ID and OOD based on step number
+    id_steps = [step for step in episode_info if step.step >= 0]
     ood_steps = [step for step in episode_info if step.step < 0]
+
+    # Find the last step in ID steps and the first step in OOD steps
+    if id_steps:
+        id_last_step = max(id_steps, key=lambda step: step.step)
+        summary_info["terminated"] = id_last_step.terminated
+        summary_info["truncated"] = id_last_step.truncated
+
     if ood_steps:
-        ood_last_step = max(ood_steps, key=lambda step: step.step)
+        ood_last_step = min(ood_steps, key=lambda step: step.step)
         summary_info["ood_terminated"] = ood_last_step.terminated
         summary_info["ood_truncated"] = ood_last_step.truncated
         summary_info["ood_n_steps"] = len(ood_steps)

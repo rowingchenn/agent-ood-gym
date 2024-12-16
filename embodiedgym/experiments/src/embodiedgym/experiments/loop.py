@@ -32,8 +32,8 @@ from browsergym.experiments.loop import AbstractAgentArgs, save_package_versions
 
 from embodiedgym.alfworld.utils import load_config, load_prompts
 from embodiedgym.alfworld import ALFWORLD_VALID_SEEN, ALFWORLD_VALID_UNSEEN
-
 from embodiedgym.core.env import AlfworldEnv, OODAlfworldEnv
+from embodiedgym.core.env import OOD_ACTION
 
 logger = logging.getLogger(__name__)
 
@@ -383,9 +383,11 @@ class StepInfo:
     raw_reward: float
         The raw reward of the step.
     terminated: bool
-        Whether the episode is terminated i.e. reached a terminal state.
+        Whether the episode is terminated i.e. reached a terminal state. report OOD signal. report infeasible message.
     truncated: bool
         Whether the episode is truncated i.e. reached a maximum number of steps.
+    ood_detected: bool
+        Whether the OOD detection is triggered. True means the LLM agent reports an OOD signal and the episode is terminated.
     action: str
         The action taken by the agent.
     agent_info: dict
@@ -402,6 +404,7 @@ class StepInfo:
     raw_reward: float = 0
     terminated: bool = None
     truncated: bool = None
+    ood_detected: bool = None
     action: str = None
     agent_info: dict = field(default_factory=dict)
     stats: dict = None
@@ -411,7 +414,9 @@ class StepInfo:
     def from_step(self, env: gym.Env, action: str, obs_preprocessor: callable):
         t = self.profiling
         t.env_start = time.time()
-        self.obs, self.reward, self.terminated, self.truncated, env_info = env.step(action)
+        self.obs, self.reward, self.terminated, self.truncated, env_info, self.ood_detected = (
+            env.step(action)
+        )
         t.env_stop = time.time()
 
         self.task_info = env_info.get("task_info", None)
@@ -578,18 +583,22 @@ def _save_summary_info(
     for key, val in _aggregate_episode_stats(episode_info).items():
         summary_info[f"stats.{key}"] = val
 
-    if len(episode_info) > 0:
-        summary_info["terminated"] = episode_info[-1].terminated
-        summary_info["truncated"] = episode_info[-1].truncated
-
-    # Additional OOD processing
-    # if ood_teriminated is True, it means the ood task is validated by the agent
-    # if ood_truncated is True, it means the agent failed to validate the ood task and reached the maximum number of steps or failed to parse actiopns in the OOD environment.
+    # Separate steps into ID and OOD based on step number
+    id_steps = [step for step in episode_info if step.step >= 0]
     ood_steps = [step for step in episode_info if step.step < 0]
+
+    # Find the last step in ID steps and the first step in OOD steps
+    if id_steps:
+        id_last_step = max(id_steps, key=lambda step: step.step)
+        summary_info["terminated"] = id_last_step.terminated
+        summary_info["truncated"] = id_last_step.truncated
+        summary_info["ood_detected"] = id_last_step.ood_detected
+
     if ood_steps:
-        ood_last_step = max(ood_steps, key=lambda step: step.step)
+        ood_last_step = min(ood_steps, key=lambda step: step.step)
         summary_info["ood_terminated"] = ood_last_step.terminated
         summary_info["ood_truncated"] = ood_last_step.truncated
+        summary_info["ood_ood_detected"] = ood_last_step.ood_detected
         summary_info["ood_n_steps"] = len(ood_steps)
 
     with open(exp_dir / "summary_info.json", "w") as f:

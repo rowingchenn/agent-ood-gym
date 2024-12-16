@@ -125,12 +125,12 @@ class AlfworldEnv:
         info["action_exec_timeout"] = 0
 
         logger.info(f"Executing action: {action}")
-
+        ood_detected = False  # This is used for OOD detection result signal
         if action not in self.admissible_commands:
             if action == "infeasible":  # TODO
                 self.infeasible_message_received = True
-            elif action == OOD_ACTION:  # TODO
-                pass
+            elif OOD_ACTION in action:  # TODO
+                ood_detected = True
             else:
                 self.last_action_error = (
                     f"Action {action} is not valid. It's not in the admissible commands!"
@@ -138,7 +138,14 @@ class AlfworldEnv:
                 obs = self._get_obs()
                 terminated = False
                 truncated = self.step_count >= self.max_step
-                return obs, 0, terminated, truncated, None  # is it right to return None as info?
+                return (
+                    obs,
+                    0,
+                    terminated,
+                    truncated,
+                    None,
+                    ood_detected,
+                )  # is it right to return None as info?
         # action is promised to be in the admissible commands
         # it's designed in agents _parse_answer() function
         observation, reward, done, task_info = self.env.step([action])
@@ -160,12 +167,14 @@ class AlfworldEnv:
 
         info["task_info"] = task_info
         obs = self._get_obs()
-        # terminate the episode if the agent is infeasible or the episode is done
-        terminated = done or (
-            self.terminate_on_infeasible and self.infeasible_message_received
+        # terminate the episode if the agent is infeasible or the episode is done or ood is detected
+        terminated = (
+            done
+            or (self.terminate_on_infeasible and self.infeasible_message_received)
+            or ood_detected
         )  # task or agent can terminate the episode
         truncated = self.step_count >= self.max_step
-        return obs, reward, terminated, truncated, info
+        return obs, reward, terminated, truncated, info, ood_detected
 
     def _get_obs(self):
         obs = {
@@ -220,14 +229,11 @@ class OODAlfworldEnv(AlfworldEnv):
         return self.obs, {}
 
     def step(self, action: str):
-        if action == OOD_ACTION:  # TODO!!!
-            terminated = True
-            truncated = False
+        if OOD_ACTION in action:  # TODO!!!
+            ood_detected = True
         elif action in self.id_env.admissible_commands:
-            terminated = False
-            truncated = True
+            ood_detected = False
         else:
-            terminated = False
-            truncated = False
+            ood_detected = False
 
-        return self.obs, 0, terminated, truncated, None
+        return self.obs, 0, True, False, None, ood_detected
