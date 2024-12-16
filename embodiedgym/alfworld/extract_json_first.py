@@ -4,7 +4,7 @@ import subprocess
 import re
 
 # Correct input JSON path
-input_json_path = "/Users/shujiedeng/agent-ood-gym-1/embodiedgym/alfworld/src/embodiedgym/alfworld/configs/valid_unseen.json"
+input_json_path = "./src/embodiedgym/alfworld/configs/valid_unseen.json"
 
 # Load the input JSON
 with open(input_json_path, 'r') as f:
