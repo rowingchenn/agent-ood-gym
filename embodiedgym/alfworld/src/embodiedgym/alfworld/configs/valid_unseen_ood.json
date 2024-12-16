@@ -8,7 +8,19 @@
         "ood_insert_step": 3,
         "original_feedback": "You arrive at fridge 1. The fridge 1 is closed.",
         "ood_feedback": "You arrive at fridge 1. The fridge 1 is closed. There is a girl standing at fridge 1.",
-        "ood_type": "task"
+        "ood_type": "task",
+        "explanation": "Add There is a girl standing at fridge 1, which will not influence with the next step, but could confuse the agent."
     },
-    {}
+    {
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-Pencil-None-Shelf-308/trial_T20190908_121952_610012/",
+        "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
+        "task": "put some pencil on shelf",
+        "oracle": "go to desk 2 > take pencil 2 from desk 2 > go to shelf 5 > move pencil 2 to shelf 5",
+        "full_step_num": 4,
+        "ood_insert_step": 1,
+        "original_feedback": "You arrive at desk 2. On the desk 2, you see a bowl 1, a cellphone 3, a mug 2, a mug 1, and a pencil 2.",
+        "ood_feedback": "You arrive at desk 2. On the desk 2, you see a bowl 1, a cellphone 3, a mug 2, a mug 1, a pencil 2, and a pen 6.",
+        "ood_type": "task",
+        "explanation": "Add a pen 5, which the agent could be confused with."
+    }
 ]
