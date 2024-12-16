@@ -129,7 +129,7 @@ class AlfworldEnv:
         if action not in self.admissible_commands:
             if action == "infeasible":  # TODO
                 self.infeasible_message_received = True
-            elif OOD_ACTION in action:  # TODO
+            elif OOD_ACTION in action:
                 ood_detected = True
             else:
                 self.last_action_error = (
@@ -199,41 +199,35 @@ class OODAlfworldEnv(AlfworldEnv):
     def __init__(self, ood_args: dict):
         super().__init__()
         self.ood_args = ood_args
-
-        # 获取当前文件的目录路径
-        current_dir = os.path.dirname(__file__)
-        json_path = os.path.join(current_dir, "configs", "valid_unseen_ood.json")
-
-        # 读取 JSON 文件
-        with open(json_path, "r") as file:
-            data = json.load(file)
-
-        # 根据 task_name 查找对应的对象
-        self.ood_task_data = None
-        for task in data:
-            if task.get("task_name") == self.ood_args["task_name"]:
-                self.ood_task_data = task
-                break
-
-        if self.ood_task_data is None:
-            raise ValueError(
-                f"Task {self.ood_args['task_name']} not found in valid_unseen_ood.json"
-            )
+        self.task_name = ood_args["task_name"]
+        self.Description = ood_args["Description"]
+        self.task = ood_args["task"]
+        self.oracle = ood_args["oracle"]
+        self.full_step_num = ood_args["full_step_num"]
+        self.ood_insert_step = ood_args["ood_insert_step"]
+        self.original_feedback = ood_args["original_feedback"]
+        self.ood_feedback = ood_args["ood_feedback"]
+        self.ood_type = ood_args["ood_type"]
+        self.explanation = ood_args["explanation"]
 
     def reset(self, id_env: AlfworldEnv):
         self.id_env = id_env
-        assert self.ood_task_data["original_feedback"] == self.id_env.environment_description
+        assert self.task_name == self.id_env.task_name
+        assert self.original_feedback == self.id_env.environment_description
         self.obs = self.id_env._get_obs()
-        self.obs["environment_description"] = self.ood_task_data["ood_feedback"]
+        self.obs["environment_description"] = self.ood_feedback
 
         return self.obs, {}
 
     def step(self, action: str):
-        if OOD_ACTION in action:  # TODO!!!
+        info = {}
+        info["action_exec_start"] = time.time()
+        info["action_exec_timeout"] = 0
+        if OOD_ACTION in action:
             ood_detected = True
         elif action in self.id_env.admissible_commands:
             ood_detected = False
         else:
             ood_detected = False
-
-        return self.obs, 0, True, False, None, ood_detected
+        info["action_exec_stop"] = time.time()
+        return self.obs, 0, True, False, info, ood_detected

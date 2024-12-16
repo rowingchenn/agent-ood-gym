@@ -1,6 +1,7 @@
 [
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-Pencil-None-Shelf-308/trial_T20190908_121952_610012",
+        "task_id": 0,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-Pencil-None-Shelf-308/trial_T20190908_121952_610012/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a bed 1, a desk 2, a desk 1, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a laundryhamper 1, a safe 1, a shelf 6, a shelf 5, a shelf 4, a shelf 3, a shelf 2, and a shelf 1.",
         "task": "put some pencil on shelf.",
         "oracle": "go to desk 2 > take pencil 2 from desk 2 > go to shelf 5 > move pencil 2 to shelf 5",
@@ -12,7 +13,8 @@
         "explanation": "The feedback is designed to confuse the agent by introducing an unexpected and abnormal event - a pencil levitating and moving on its own. While this does not violate the laws of physics in a broad sense (as it is technically possible in a zero-gravity environment), it is highly unlikely and abnormal in the given task-specific context of being in a room and needing to put the pencil on the shelf. This could mislead the agent into thinking that the pencil is not accessible or usable for the task."
     },
     {
-        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-PepperShaker-None-Drawer-10/trial_T20190918_154424_844749",
+        "task_id": 1,
+        "task_name": "json_2.1.1/valid_unseen/pick_and_place_simple-PepperShaker-None-Drawer-10/trial_T20190918_154424_844749/game.tw-pddl",
         "Description": "You are in the middle of a room. Looking quickly around you, you see a cabinet 6, a cabinet 5, a cabinet 4, a cabinet 3, a cabinet 2, a cabinet 1, a coffeemachine 1, a countertop 3, a countertop 2, a countertop 1, a drawer 3, a drawer 2, a drawer 1, a fridge 1, a garbagecan 1, a microwave 1, a shelf 3, a shelf 2, a shelf 1, a sinkbasin 1, a stoveburner 4, a stoveburner 3, a stoveburner 2, a stoveburner 1, and a toaster 1.",
         "task": "put a peppershaker in drawer.",
         "oracle": "go to cabinet 1 > take peppershaker 2 from cabinet 1 > go to drawer 1 > open drawer 1 > move peppershaker 2 to drawer 1",

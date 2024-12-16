@@ -131,7 +131,7 @@ class ExpArgs:
         if self.exp_name is None:
             task_name = self.env_args.task_name
             if self.ood_args is not None:
-                self.exp_name = f"embodiedgym_{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args['ood_task_id']}"
+                self.exp_name = f"embodiedgym_{self.agent_args.agent_name}_on_{task_name}_oodarena.{self.ood_args['task_id']}"
             else:
                 self.exp_name = f"embodiedgym_{self.agent_args.agent_name}_on_{task_name}"
 
@@ -201,7 +201,9 @@ class ExpArgs:
 
             while not step_info.is_done:  # when truncated or terminated, the episode is done
                 if (
-                    not self.ood_done and self.ood_args["ood_insert_step"] == step_info.step
+                    not self.ood_done
+                    and self.ood_args["original_feedback"]
+                    == step_info.obs["environment_description"]
                 ):  # simulate OOD observation step
                     ood_env = self.env_args.make_env(
                         ood_args=self.ood_args,
@@ -251,14 +253,11 @@ class ExpArgs:
                         ood_step_info.from_step(
                             env=ood_env, action=ood_action, obs_preprocessor=agent.obs_preprocessor
                         )
-
-                        # break directly after the ood step since in Alfworld we only want one step ood and
-                        break
                     self.ood_done = True
                 else:  # normal step
-                    logger.debug(f"Starting step {step_info.step}.")
+                    logger.info(f"Starting step {step_info.step}.")
                     action = step_info.from_action(agent)
-                    logger.debug(f"Agent chose action:\n {action}")
+                    logger.info(f"Agent chose action:\n {action}")
 
                     if action is None:
                         # will end the episode after saving the step info.
@@ -280,6 +279,9 @@ class ExpArgs:
                     logger.debug(f"Sending action to environment.")
                     step_info.from_step(env, action, obs_preprocessor=agent.obs_preprocessor)
                     logger.debug(f"Environment stepped.")
+                    logger.info(
+                        f"Environment description: {step_info.obs['environment_description']}"
+                    )
 
         except Exception as e:
             err_msg = f"Exception uncaught by agent or environment in task {self.env_args.task_name}.\n{type(e).__name__}:\n{e}"
@@ -466,8 +468,8 @@ class StepInfo:
         t.action_exect_after_timeout = t.env_stop
         t.action_exec_stop = t.env_stop
 
-        if obs_preprocessor:
-            self.obs = obs_preprocessor(self.obs)
+        # if obs_preprocessor:
+        #     self.obs = obs_preprocessor(self.obs)
 
     @property
     def is_done(self):
@@ -600,6 +602,8 @@ def _save_summary_info(
         summary_info["ood_truncated"] = ood_last_step.truncated
         summary_info["ood_ood_detected"] = ood_last_step.ood_detected
         summary_info["ood_n_steps"] = len(ood_steps)
+    else:  # if no ood steps, it means the ood is not triggered and LLM agents never make it to the ood step
+        summary_info["ood_n_steps"] = 0  # so the ood_n_steps is 0 is a signal
 
     with open(exp_dir / "summary_info.json", "w") as f:
         json.dump(summary_info, f, indent=4)
