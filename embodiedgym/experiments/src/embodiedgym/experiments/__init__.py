@@ -1,1 +1,1 @@
-from .loop import AlfworldEnvArgs, ExpArgs, get_exp_results
+from .loop import AlfworldEnvArgs, ExpArgs, get_exp_result
