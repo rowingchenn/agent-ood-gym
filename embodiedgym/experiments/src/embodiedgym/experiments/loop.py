@@ -201,7 +201,7 @@ class ExpArgs:
 
             while not step_info.is_done:  # when truncated or terminated, the episode is done
                 if (
-                    self.ood_args["ood_insert_step"] == step_info.step and not self.ood_done
+                    not self.ood_done and self.ood_args["ood_insert_step"] == step_info.step
                 ):  # simulate OOD observation step
                     ood_env = self.env_args.make_env(
                         ood_args=self.ood_args,
@@ -422,8 +422,8 @@ class StepInfo:
         t.action_exect_after_timeout = env_info["action_exec_stop"]
         t.action_exec_stop = env_info["action_exec_stop"] - env_info["action_exec_timeout"]
 
-        if obs_preprocessor:
-            self.obs = obs_preprocessor(self.obs)
+        # if obs_preprocessor:
+        #     self.obs = obs_preprocessor(self.obs)
 
     def from_action(self, agent: Agent):
         self.profiling.agent_start = time.time()
@@ -444,8 +444,9 @@ class StepInfo:
         t.action_exect_after_timeout = t.env_stop
         t.action_exec_stop = t.env_stop
 
-        if obs_preprocessor:
-            self.obs = obs_preprocessor(self.obs)
+        # 这里有个莫名其妙的Bug，就是如果obs_preprocessor里面是pass，那么self.obs就会变成None
+        # if obs_preprocessor:
+        #     self.obs = obs_preprocessor(self.obs)
 
     def from_reset_ood(
         self, ood_env: OODAlfworldEnv, id_env: AlfworldEnv, obs_preprocessor: callable

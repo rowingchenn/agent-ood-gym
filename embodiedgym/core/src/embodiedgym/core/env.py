@@ -62,11 +62,12 @@ class AlfworldEnv:
         # obs: Text observations, i.e. command's feedback.
         # infos: Information requested when creating the environments.
         self.ob, self.task_info = self.env.reset()
-        ob = "\n".join(ob[0].split("\n\n")[1:])
+        self.ob = "\n".join(self.ob[0].split("\n\n")[1:])
         self.ob = self.ob.split("Your task is to: ")
         self.goal_object = self.ob[1]
         self.environment_description = self.ob[0]
         self.admissible_commands = "\n".join(self.task_info.get("admissible_commands", [[]])[0])
+        self.admissible_commands = self.admissible_commands + "\n" + f"{OOD_ACTION}"
 
         if self.goal_object is None:
             self.goal_object = []
@@ -123,7 +124,7 @@ class AlfworldEnv:
         info["action_exec_start"] = time.time()
         info["action_exec_timeout"] = 0
 
-        logger.debug(f"Executing action: {action}")
+        logger.info(f"Executing action: {action}")
 
         if action not in self.admissible_commands:
             if action == "infeasible":  # TODO
@@ -140,7 +141,7 @@ class AlfworldEnv:
                 return obs, 0, terminated, truncated, None  # is it right to return None as info?
         # action is promised to be in the admissible commands
         # it's designed in agents _parse_answer() function
-        observation, reward, done, task_info = self.env.step(action)
+        observation, reward, done, task_info = self.env.step([action])
         self.environment_description, reward, done = (
             observation[0],
             task_info["won"][0],
@@ -149,11 +150,7 @@ class AlfworldEnv:
         self.admissible_commands = "\n".join(task_info.get("admissible_commands", [[]])[0])
 
         # add a gold action for ood
-        self.admissible_commands = (
-            self.admissible_commands
-            + "\n"
-            + f"{OOD_ACTION}. [This action means you have observed an abnormal environment change and you think you should stop and report a signal to the user.]"
-        )
+        self.admissible_commands = self.admissible_commands + "\n" + f"{OOD_ACTION}"
 
         logger.debug(f"Action executed")
         info["action_exec_stop"] = time.time()
