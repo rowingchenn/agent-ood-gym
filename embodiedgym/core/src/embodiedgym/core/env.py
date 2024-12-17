@@ -237,9 +237,13 @@ class OODAlfworldEnv(AlfworldEnv):
         info["action_exec_timeout"] = 0
         if OOD_ACTION in action:
             ood_detected = True
+            terminated = True
+            truncated = False
         elif action in self.id_env.admissible_commands:
             ood_detected = False
+            terminated = False
+            truncated = True
         else:
             ood_detected = False
         info["action_exec_stop"] = time.time()
-        return self.obs, 0, True, False, info, ood_detected
+        return self.obs, 0, terminated, truncated, info, ood_detected

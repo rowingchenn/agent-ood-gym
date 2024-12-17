@@ -202,8 +202,8 @@ class ExpArgs:
             while not step_info.is_done:  # when truncated or terminated, the episode is done
                 if (
                     not self.ood_done
-                    and self.ood_args["original_feedback"]
-                    == step_info.obs["environment_description"]
+                    and self.ood_args["original_feedback"].strip()
+                    == step_info.obs["environment_description"].strip()
                 ):  # simulate OOD observation step
                     ood_env = self.env_args.make_env(
                         ood_args=self.ood_args,
