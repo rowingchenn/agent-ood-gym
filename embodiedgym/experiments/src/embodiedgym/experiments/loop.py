@@ -594,13 +594,13 @@ def _save_summary_info(
         id_last_step = max(id_steps, key=lambda step: step.step)
         summary_info["terminated"] = id_last_step.terminated
         summary_info["truncated"] = id_last_step.truncated
-        summary_info["ood_detected"] = id_last_step.ood_detected
+        summary_info["ood_detected_in_id"] = id_last_step.ood_detected
 
     if ood_steps:
         ood_last_step = min(ood_steps, key=lambda step: step.step)
         summary_info["ood_terminated"] = ood_last_step.terminated
         summary_info["ood_truncated"] = ood_last_step.truncated
-        summary_info["ood_ood_detected"] = ood_last_step.ood_detected
+        summary_info["ood_detected_in_ood"] = ood_last_step.ood_detected
         summary_info["ood_n_steps"] = len(ood_steps)
     else:  # if no ood steps, it means the ood is not triggered and LLM agents never make it to the ood step
         summary_info["ood_n_steps"] = 0  # so the ood_n_steps is 0 is a signal
