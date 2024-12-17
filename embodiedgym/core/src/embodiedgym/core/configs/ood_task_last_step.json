@@ -7,7 +7,7 @@
         "oracle": "go to desk 2 > take pencil 2 from desk 2 > go to shelf 5 > move pencil 2 to shelf 5",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at shelf 5. On the shelf 5, you see nothing.",
+        "original_feedback": "You arrive at shelf 5. On the shelf 5, you see nothing.",
         "ood_feedback": "You arrive at shelf 5. On the shelf 5, you see nothing. Suddenly, you notice a bird flying inside the room.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an unexpected observation of a bird flying inside the room, which is abnormal in this task-specific context and could distract the agent from the task of putting a pencil on the shelf."
@@ -20,7 +20,7 @@
         "oracle": "go to cabinet 1 > take peppershaker 2 from cabinet 1 > go to drawer 1 > open drawer 1 > move peppershaker 2 to drawer 1",
         "full_step_num": 5,
         "ood_insert_step": 4,
-        "original_feedback": " You open the drawer 1. The drawer 1 is open. In it, you see a cellphone 1.",
+        "original_feedback": "You open the drawer 1. The drawer 1 is open. In it, you see a cellphone 1.",
         "ood_feedback": "You open the drawer 1. The drawer 1 is open. In it, you see a cellphone 1. The cellphone 1 is vibrating, indicating an incoming call.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a distracting event, the vibrating cellphone, which is irrelevant to the task of moving the peppershaker but might mislead the agent into interacting with it."
@@ -33,7 +33,7 @@
         "oracle": "go to drawer 5 > open drawer 5 > take watch 1 from drawer 5 > go to safe 1 > open safe 1 > move watch 1 to safe 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You open the safe 1. The safe 1 is open. In it, you see a vase 2.",
+        "original_feedback": "You open the safe 1. The safe 1 is open. In it, you see a vase 2.",
         "ood_feedback": "You open the safe 1. The safe 1 is open. In it, you see a vase 2. The safe is also emitting a soft humming sound.",
         "ood_type": "task",
         "explanation": "The introduction of the safe emitting a soft humming sound could potentially confuse the agent into thinking it's something to be concerned about, while it doesn't prevent the agent from completing the task."
@@ -46,7 +46,7 @@
         "oracle": "go to cabinet 2 > open cabinet 2 > take saltshaker 1 from cabinet 2 > go to drawer 1 > open drawer 1 > move saltshaker 1 to drawer 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You open the drawer 1. The drawer 1 is open. In it, you see a fork 1, and a peppershaker 1.",
+        "original_feedback": "You open the drawer 1. The drawer 1 is open. In it, you see a fork 1, and a peppershaker 1.",
         "ood_feedback": "You open the drawer 1. The drawer 1 is open. You notice the fork 1 is slightly bent, and a peppershaker 1 is present. ",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an irrelevant detail about the fork being bent, which is not related to the task but might distract the agent by insinuating the need for action."
@@ -59,7 +59,7 @@
         "oracle": "go to countertop 3 > take saltshaker 1 from countertop 3 > go to drawer 1 > open drawer 1 > move saltshaker 1 to drawer 1",
         "full_step_num": 5,
         "ood_insert_step": 4,
-        "original_feedback": " You open the drawer 1. The drawer 1 is open. In it, you see a fork 1.",
+        "original_feedback": "You open the drawer 1. The drawer 1 is open. In it, you see a fork 1.",
         "ood_feedback": "You open the drawer 1. The drawer 1 is open. In it, you see a fork 1. Surprisingly, the drawer seems to be vibrating slightly.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the abnormal detail that the drawer is vibrating, which may distract the agent and create confusion, but doesn't prevent the agent from putting the saltshaker in the drawer."
@@ -72,7 +72,7 @@
         "oracle": "go to countertop 2 > take saltshaker 2 from countertop 2 > go to cabinet 4 > move saltshaker 2 to cabinet 4",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at cabinet 4. On the cabinet 4, you see nothing.",
+        "original_feedback": "You arrive at cabinet 4. On the cabinet 4, you see nothing.",
         "ood_feedback": "You arrive at cabinet 4. On the cabinet 4, you see nothing. Suddenly, the saltshaker on countertop 2 starts to glow.",
         "ood_type": "task",
         "explanation": "The OOD feedback adds an abnormal event of the saltshaker glowing that could distract the agent, but does not prevent the agent from performing the task correctly."
@@ -85,7 +85,7 @@
         "oracle": "go to countertop 1 > take soapbottle 2 from countertop 1 > go to toilet 1 > move soapbottle 2 to toilet 1",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at toilet 1. On the toilet 1, you see a spraybottle 1.",
+        "original_feedback": "You arrive at toilet 1. On the toilet 1, you see a spraybottle 1.",
         "ood_feedback": "You arrive at toilet 1. On the toilet 1, you see a spraybottle 1. The soapbottle 2 is glowing with a peculiar light.",
         "ood_type": "task",
         "explanation": "The OOD feedback adds confusion by stating the soapbottle is 'glowing with a peculiar light,' suggesting an irrelevant anomaly that may distract the agent from completing the task, though the soapbottle can still be moved to the toilet as required."
@@ -98,7 +98,7 @@
         "oracle": "go to countertop 1 > take soapbottle 3 from countertop 1 > go to toilet 1 > move soapbottle 3 to toilet 1",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at toilet 1. On the toilet 1, you see a candle 2.",
+        "original_feedback": "You arrive at toilet 1. On the toilet 1, you see a candle 2.",
         "ood_feedback": "You arrive at toilet 1. On the toilet 1, you see a candle 2. The soapbottle seems to weigh a bit heavy today.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an irrelevant observation about the weight of the soapbottle, which could potentially confuse the agent into thinking the weight of the soapbottle is a factor in the task, but it doesn't prevent the agent from following the correct oracle."
@@ -111,7 +111,7 @@
         "oracle": "go to shelf 2 > take saltshaker 1 from shelf 2 > go to cabinet 4 > move saltshaker 1 to cabinet 4",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at cabinet 4. On the cabinet 4, you see a glassbottle 1, and a soapbottle 1.",
+        "original_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a glassbottle 1, and a soapbottle 1.",
         "ood_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a glassbottle 1, and a soapbottle 1. Suddenly, you notice the glassbottle 1 is glowing in the dark.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an abnormal event, a 'glowing glassbottle', which is unusual and could distract the agent from its task of moving the saltshaker to the cabinet."
@@ -124,7 +124,7 @@
         "oracle": "go to countertop 2 > take mug 1 from countertop 2 > go to sinkbasin 1 > clean mug 1 with sinkbasin 1 > go to coffeemachine 1 > move mug 1 to coffeemachine 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at coffeemachine 1. On the coffeemachine 1, you see nothing.",
+        "original_feedback": "You arrive at coffeemachine 1. On the coffeemachine 1, you see nothing.",
         "ood_feedback": "You arrive at coffeemachine 1. On the coffeemachine 1, you see nothing. Surprisingly, the coffeemachine is already brewing a pot of coffee.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the abnormal situation of the coffeemachine already brewing coffee, which might mislead the agent into thinking it cannot place the mug in the coffeemachine, though it can still follow the correct oracle."
@@ -137,7 +137,7 @@
         "oracle": "go to garbagecan 1 > take egg 3 from garbagecan 1 > go to sinkbasin 1 > clean egg 3 with sinkbasin 1 > go to microwave 1 > open microwave 1 > move egg 3 to microwave 1",
         "full_step_num": 7,
         "ood_insert_step": 6,
-        "original_feedback": " You open the microwave 1. The microwave 1 is open. In it, you see a apple 1, and a potato 1.",
+        "original_feedback": "You open the microwave 1. The microwave 1 is open. In it, you see a apple 1, and a potato 1.",
         "ood_feedback": "You open the microwave 1. The microwave 1 is open. In it, you see a apple 1, and a potato 1. The egg is emitting a strange blue glow.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an abnormal condition for the egg, suggesting it is glowing blue, which could lead to confusion as this is not expected in the task context but the agent still can put the egg in the microwave."
@@ -150,7 +150,7 @@
         "oracle": "go to cabinet 1 > take bowl 1 from cabinet 1 > go to sinkbasin 1 > clean bowl 1 with sinkbasin 1 > go to cabinet 4 > move bowl 1 to cabinet 4",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at cabinet 4. On the cabinet 4, you see a soapbottle 2, and a soapbottle 1.",
+        "original_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a soapbottle 2, and a soapbottle 1.",
         "ood_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a soapbottle 2, and a soapbottle 1. The soapbottle 1 is half empty and appears to be leaking.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a distracting factor about the soapbottle being half empty and leaking, which might lead the agent to think it needs to address this issue, although it's irrelevant to the task of cleaning and moving the bowl."
@@ -163,7 +163,7 @@
         "oracle": "go to cabinet 3 > take plate 1 from cabinet 3 > go to sinkbasin 1 > clean plate 1 with sinkbasin 1 > go to countertop 2 > move plate 1 to countertop 2",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at countertop 2. On the countertop 2, you see nothing.",
+        "original_feedback": "You arrive at countertop 2. On the countertop 2, you see nothing.",
         "ood_feedback": "You arrive at countertop 2. On the countertop 2, you see nothing. There's a smell of freshly baked cookies in the air.",
         "ood_type": "task",
         "explanation": "The mention of the smell of freshly baked cookies is abnormal and irrelevant to the task of cleaning and moving a plate, potentially distracting the agent."
@@ -176,7 +176,7 @@
         "oracle": "go to countertop 1 > take soapbar 1 from countertop 1 > go to sinkbasin 1 > clean soapbar 1 with sinkbasin 1 > go to countertop 1 > move soapbar 1 to countertop 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at countertop 1. On the countertop 1, you see a candle 2, a soapbottle 1, and a toiletpaper 1.",
+        "original_feedback": "You arrive at countertop 1. On the countertop 1, you see a candle 2, a soapbottle 1, and a toiletpaper 1.",
         "ood_feedback": "You arrive at countertop 1. On the countertop 1, you see a candle 2, a soapbottle 1, and a toiletpaper 1. Oh, it seems like the soapbar 1 is a little slippery.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the irrelevant characteristic of the soapbar being slippery, which could mislead the agent into thinking it needs to handle the soapbar differently, even though it doesn't affect the task of moving the soapbar to the countertop."
@@ -189,7 +189,7 @@
         "oracle": "go to toilet 1 > take soapbar 2 from toilet 1 > go to sinkbasin 1 > clean soapbar 2 with sinkbasin 1 > go to countertop 1 > move soapbar 2 to countertop 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at countertop 1. On the countertop 1, you see a soapbar 1, and a spraybottle 1.",
+        "original_feedback": "You arrive at countertop 1. On the countertop 1, you see a soapbar 1, and a spraybottle 1.",
         "ood_feedback": "You arrive at countertop 1. On the countertop 1, you see a soapbar 1, and a spraybottle 1. The soapbar 1 seems to be emitting a strange green glow.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a misleading element by stating the soapbar is 'emitting a strange green glow,' which could confuse the agent about the state of the soapbar, although this does not affect the task of placing the clean soapbar on the countertop."
@@ -202,7 +202,7 @@
         "oracle": "go to countertop 2 > take knife 1 from countertop 2 > go to sinkbasin 1 > clean knife 1 with sinkbasin 1 > go to countertop 2 > move knife 1 to countertop 2",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at countertop 2. On the countertop 2, you see a cellphone 2, a dishsponge 1, a fork 1, a lettuce 3, a lettuce 1, a potato 1, a tomato 1, and a vase 1.",
+        "original_feedback": "You arrive at countertop 2. On the countertop 2, you see a cellphone 2, a dishsponge 1, a fork 1, a lettuce 3, a lettuce 1, a potato 1, a tomato 1, and a vase 1.",
         "ood_feedback": "You arrive at countertop 2. On the countertop 2, you see a cellphone 2, a dishsponge 1, a fork 1, a lettuce 3, a lettuce 1, a potato 1, a tomato 1, and a vase 1. The knife you are supposed to clean seems to be glowing.",
         "ood_type": "task",
         "explanation": "The feedback adds an unusual detail about the knife 'glowing' which could confuse the agent, however it doesn't prevent the agent from performing the task."
@@ -215,7 +215,7 @@
         "oracle": "go to countertop 3 > take spatula 1 from countertop 3 > go to sinkbasin 1 > clean spatula 1 with sinkbasin 1 > go to drawer 1 > open drawer 1 > move spatula 1 to drawer 1",
         "full_step_num": 7,
         "ood_insert_step": 6,
-        "original_feedback": " You open the drawer 1. The drawer 1 is open. In it, you see a fork 1.",
+        "original_feedback": "You open the drawer 1. The drawer 1 is open. In it, you see a fork 1.",
         "ood_feedback": "You open the drawer 1. The drawer 1 is open. In it, you see a fork 1. The spatula seems to have some hard crusts stuck on it.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an irrelevant observation about the condition of the spatula, potentially confusing the agent into thinking it might need to scrape off the crusts before cleaning it, though this is not necessary for the task."
@@ -228,7 +228,7 @@
         "oracle": "go to cabinet 4 > open cabinet 4 > take cloth 1 from cabinet 4 > go to sinkbasin 1 > clean cloth 1 with sinkbasin 1 > go to cabinet 4 > move cloth 1 to cabinet 4",
         "full_step_num": 7,
         "ood_insert_step": 6,
-        "original_feedback": " You arrive at cabinet 4. The cabinet 4 is open. In it, you see nothing.",
+        "original_feedback": "You arrive at cabinet 4. The cabinet 4 is open. In it, you see nothing.",
         "ood_feedback": "You arrive at cabinet 4. The cabinet 4 is open. In it, you see nothing. There's a hint of a strange, musky smell emanating from cabinet 4.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the detail of a 'strange, musky smell' which is irrelevant to the task of cleaning and placing a cloth in the cabinet, potentially confusing the agent into believing there's an additional step needed to complete the task."
@@ -241,7 +241,7 @@
         "oracle": "go to coffeemachine 1 > take mug 1 from coffeemachine 1 > go to microwave 1 > heat mug 1 with microwave 1 > go to cabinet 4 > move mug 1 to cabinet 4",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at cabinet 4. On the cabinet 4, you see nothing.",
+        "original_feedback": "You arrive at cabinet 4. On the cabinet 4, you see nothing.",
         "ood_feedback": "You arrive at cabinet 4. On the cabinet 4, you see nothing. However, you notice the cabinet is slightly ajar and has a faint smell of cinnamon.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a smell of cinnamon and the cabinet being ajar, which may confuse the agent into thinking these factors are relevant to the task of putting a hot mug in the cabinet."
@@ -254,7 +254,7 @@
         "oracle": "go to garbagecan 1 > take apple 2 from garbagecan 1 > go to microwave 1 > heat apple 2 with microwave 1 > go to garbagecan 1 > move apple 2 to garbagecan 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at garbagecan 1. On the garbagecan 1, you see a apple 1.",
+        "original_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a apple 1.",
         "ood_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a apple 1. The apple appears to have a small worm crawling out of it.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an irrelevant detail about a worm crawling out of the apple, which could potentially distract the agent and make it hesitate to proceed with heating and disposing of the apple, despite it being irrelevant to the task completion."
@@ -267,7 +267,7 @@
         "oracle": "go to coffeemachine 1 > take egg 1 from countertop 1 > go to microwave 1 > heat egg 1 with microwave 1 > go to garbagecan 1 > move egg 1 to garbagecan 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at garbagecan 1. On the garbagecan 1, you see a lettuce 3, and a papertowelroll 1.",
+        "original_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a lettuce 3, and a papertowelroll 1.",
         "ood_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a lettuce 3, and a papertowelroll 1. The lettuce 3 is starting to wilt.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces confusion by stating the lettuce is 'starting to wilt,' which might imply it needs attention, even though it's irrelevant to the current task of disposing a hot egg."
@@ -280,7 +280,7 @@
         "oracle": "go to sinkbasin 1 > take apple 3 from sinkbasin 1 > go to microwave 1 > heat apple 3 with microwave 1 > go to garbagecan 1 > move apple 3 to garbagecan 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at garbagecan 1. On the garbagecan 1, you see a papertowelroll 1, and a potato 1.",
+        "original_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a papertowelroll 1, and a potato 1.",
         "ood_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a papertowelroll 1, and a potato 1. The potato appears to be sprouting.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a misleading detail about the potato sprouting, which is irrelevant to the task of putting a hot apple in the garbagecan but could distract the agent."
@@ -293,7 +293,7 @@
         "oracle": "go to garbagecan 1 > take apple 3 from garbagecan 1 > go to microwave 1 > heat apple 3 with microwave 1 > go to garbagecan 1 > move apple 3 to garbagecan 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at garbagecan 1. On the garbagecan 1, you see a apple 2, and a papertowelroll 1.",
+        "original_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a apple 2, and a papertowelroll 1.",
         "ood_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a apple 2, and a papertowelroll 1. The apple 2 has a small worm crawling out of it.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the irrelevant detail of a worm crawling out of the apple, which may confuse the agent into thinking the apple is not suitable for the task, even though it can still be heated and moved to the garbage can as required."
@@ -306,7 +306,7 @@
         "oracle": "go to countertop 3 > take tomato 1 from countertop 3 > go to microwave 1 > heat tomato 1 with microwave 1 > go to garbagecan 1 > move tomato 1 to garbagecan 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at garbagecan 1. On the garbagecan 1, you see nothing.",
+        "original_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see nothing.",
         "ood_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see nothing. However, you notice a hot tomato on countertop 3 is spontaneously cooling down.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the abnormal scenario of a tomato cooling down spontaneously, which could potentially mislead the agent into thinking that the tomato doesn't need to be heated, which is contrary to the correct oracle path."
@@ -319,7 +319,7 @@
         "oracle": "go to coffeemachine 1 > take potato 1 from countertop 1 > go to microwave 1 > heat potato 1 with microwave 1 > go to garbagecan 1 > move potato 1 to garbagecan 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at garbagecan 1. On the garbagecan 1, you see a apple 2, a dishsponge 2, and a egg 2.",
+        "original_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a apple 2, a dishsponge 2, and a egg 2.",
         "ood_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a apple 2, a dishsponge 2, and a egg 2. The potato seems to be already cooked.",
         "ood_type": "task",
         "explanation": "The OOD feedback adds confusion by stating that the 'potato seems to be already cooked', suggesting an irrelevant precondition that may mislead the agent into thinking it does not need to heat the potato, although it is required in the task."
@@ -332,7 +332,7 @@
         "oracle": "go to cabinet 4 > take mug 1 from cabinet 4 > go to microwave 1 > heat mug 1 with microwave 1 > go to cabinet 4 > move mug 1 to cabinet 4",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at cabinet 4. On the cabinet 4, you see a soapbottle 1.",
+        "original_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a soapbottle 1.",
         "ood_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a soapbottle 1. The mug seems to be a rare antique.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the irrelevant detail that the mug is a 'rare antique', potentially misleading the agent into handling it differently or not at all, though it can still be heated and placed in the cabinet as required."
@@ -345,7 +345,7 @@
         "oracle": "go to cabinet 3 > take mug 1 from cabinet 3 > go to fridge 1 > cool mug 1 with fridge 1 > go to cabinet 4 > move mug 1 to cabinet 4",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at cabinet 4. On the cabinet 4, you see a plate 1, and a soapbottle 1.",
+        "original_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a plate 1, and a soapbottle 1.",
         "ood_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a plate 1, and a soapbottle 1. The mug in your hand seems to be vibrating slightly.",
         "ood_type": "task",
         "explanation": "The OOD feedback adds the abnormal detail of the mug 'vibrating,' which may confuse the agent into thinking it needs to address this issue, while it is irrelevant to the task of placing the mug in the cabinet."
@@ -358,7 +358,7 @@
         "oracle": "go to coffeemachine 1 > take lettuce 1 from countertop 1 > go to fridge 1 > cool lettuce 1 with fridge 1 > go to countertop 2 > move lettuce 1 to countertop 2",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at countertop 2. On the countertop 2, you see a bowl 1, a bread 2, a butterknife 1, a fork 2, a fork 1, a knife 1, a plate 1, a saltshaker 1, a soapbottle 1, a spatula 2, and a tomato 1.",
+        "original_feedback": "You arrive at countertop 2. On the countertop 2, you see a bowl 1, a bread 2, a butterknife 1, a fork 2, a fork 1, a knife 1, a plate 1, a saltshaker 1, a soapbottle 1, a spatula 2, and a tomato 1.",
         "ood_feedback": "You arrive at countertop 2. On the countertop 2, you see a bowl 1, a bread 2, a butterknife 1, a fork 2, a fork 1, a knife 1, a plate 1, a saltshaker 1, a soapbottle 1, a spatula 2, and a tomato 1. There's also a large turkey that's taking up most of the countertop space.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a large turkey on the countertop, creating an unexpected obstacle that might confuse the agent about placing the lettuce on the countertop."
@@ -371,7 +371,7 @@
         "oracle": "go to coffeemachine 1 > take mug 2 from coffeemachine 1 > go to fridge 1 > cool mug 2 with fridge 1 > go to cabinet 4 > move mug 2 to cabinet 4",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at cabinet 4. On the cabinet 4, you see a bowl 1.",
+        "original_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a bowl 1.",
         "ood_feedback": "You arrive at cabinet 4. On the cabinet 4, you see a bowl 1. The bowl is filled with freshly popped popcorn.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the irrelevant information that the bowl on the cabinet is filled with popcorn, which may distract the agent but does not prevent it from placing the cool mug in the cabinet."
@@ -384,7 +384,7 @@
         "oracle": "go to countertop 2 > take lettuce 1 from countertop 2 > go to fridge 1 > cool lettuce 1 with fridge 1 > go to countertop 2 > move lettuce 1 to countertop 2",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at countertop 2. On the countertop 2, you see a butterknife 1, a creditcard 2, a creditcard 1, a cup 1, a knife 1, a plate 2, and a spatula 1.",
+        "original_feedback": "You arrive at countertop 2. On the countertop 2, you see a butterknife 1, a creditcard 2, a creditcard 1, a cup 1, a knife 1, a plate 2, and a spatula 1.",
         "ood_feedback": "You arrive at countertop 2. On the countertop 2, you see a butterknife 1, a creditcard 2, a creditcard 1, a cup 1, a knife 1, a plate 2, and a spatula 1. The lettuce is already cold to the touch.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a misleading element by stating that the lettuce is 'already cold', suggesting an irrelevant precondition that may confuse the agent in performing the task of cooling the lettuce, though the task can still be completed as required."
@@ -397,7 +397,7 @@
         "oracle": "go to garbagecan 1 > take tomato 1 from garbagecan 1 > go to fridge 1 > cool tomato 1 with fridge 1 > go to microwave 1 > open microwave 1 > move tomato 1 to microwave 1",
         "full_step_num": 7,
         "ood_insert_step": 6,
-        "original_feedback": " You open the microwave 1. The microwave 1 is open. In it, you see nothing.",
+        "original_feedback": "You open the microwave 1. The microwave 1 is open. In it, you see nothing.",
         "ood_feedback": "You open the microwave 1. The microwave 1 is open. In it, you see nothing. Suddenly, you notice that the microwave is humming a strange melody.",
         "ood_type": "task",
         "explanation": "The OOD feedback is designed to distract the agent by introducing an unexpected observation that the microwave is humming a melody, which is abnormal in this task-specific context and could lead to unnecessary confusion."
@@ -410,7 +410,7 @@
         "oracle": "go to sinkbasin 1 > take potato 2 from sinkbasin 1 > go to fridge 1 > cool potato 2 with fridge 1 > go to microwave 1 > open microwave 1 > move potato 2 to microwave 1",
         "full_step_num": 7,
         "ood_insert_step": 6,
-        "original_feedback": " You open the microwave 1. The microwave 1 is open. In it, you see a egg 1.",
+        "original_feedback": "You open the microwave 1. The microwave 1 is open. In it, you see a egg 1.",
         "ood_feedback": "You open the microwave 1. The microwave 1 is open. In it, you see a egg 1. You notice a faint smell of popcorn in the air.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a smell of popcorn which may confuse the agent into thinking there is popcorn to deal with, yet it's irrelevant to the task of putting a potato in the microwave."
@@ -423,7 +423,7 @@
         "oracle": "go to sinkbasin 1 > take tomato 2 from sinkbasin 1 > go to fridge 1 > cool tomato 2 with fridge 1 > go to microwave 1 > open microwave 1 > move tomato 2 to microwave 1",
         "full_step_num": 7,
         "ood_insert_step": 6,
-        "original_feedback": " You open the microwave 1. The microwave 1 is open. In it, you see a egg 1.",
+        "original_feedback": "You open the microwave 1. The microwave 1 is open. In it, you see a egg 1.",
         "ood_feedback": "You open the microwave 1. The microwave 1 is open. In it, you see a egg 1. There's a faint smell of burnt popcorn in the air.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a distracting element - the smell of burnt popcorn - which is not relevant to the task of putting a cool tomato in the microwave, but could potentially confuse the agent."
@@ -436,7 +436,7 @@
         "oracle": "go to coffeemachine 1 > take mug 1 from countertop 1 > go to fridge 1 > cool mug 1 with fridge 1 > go to coffeemachine 1 > move mug 1 to coffeemachine 1",
         "full_step_num": 6,
         "ood_insert_step": 5,
-        "original_feedback": " You arrive at coffeemachine 1. On the coffeemachine 1, you see nothing.",
+        "original_feedback": "You arrive at coffeemachine 1. On the coffeemachine 1, you see nothing.",
         "ood_feedback": "You arrive at coffeemachine 1. On the coffeemachine 1, you see nothing. Suddenly, you notice that the mug you're supposed to use is an antique.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an irrelevant factor about the mug being an antique, which could potentially confuse the agent into handling it differently, even though it doesn't affect the task of cooling and moving it to the coffeemachine."
@@ -449,7 +449,7 @@
         "oracle": "go to desk 2 > take cd 1 from desk 2 > go to desk 1 > use desklamp 1",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at desk 1. On the desk 1, you see a alarmclock 1, a bowl 1, a desklamp 1, and a mug 1.",
+        "original_feedback": "You arrive at desk 1. On the desk 1, you see a alarmclock 1, a bowl 1, a desklamp 1, and a mug 1.",
         "ood_feedback": "You arrive at desk 1. On the desk 1, you see a alarmclock 1, a bowl 1, a desklamp 1, and a mug 1. Surprisingly, the desklamp flickers when you approach it.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces confusion by making the desklamp flicker, which is abnormal and may lead the agent to think that the desklamp is not functional, thus potentially distracting it from examining the cd with it."
@@ -462,7 +462,7 @@
         "oracle": "go to bed 1 > take book 1 from bed 1 > go to desk 1 > use desklamp 1",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at desk 1. On the desk 1, you see a alarmclock 2, a creditcard 1, a desklamp 1, and a keychain 2.",
+        "original_feedback": "You arrive at desk 1. On the desk 1, you see a alarmclock 2, a creditcard 1, a desklamp 1, and a keychain 2.",
         "ood_feedback": "You arrive at desk 1. On the desk 1, you see a alarmclock 2, a creditcard 1, a desklamp 1, and a keychain 2. The desklamp is turned off.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the irrelevant detail that the desklamp is off, which could confuse the agent by implying the need to turn it on to complete the task, although it is not necessary to look at the book."
@@ -475,7 +475,7 @@
         "oracle": "go to desk 1 > use desklamp 1 > take mug 1 from desk 1",
         "full_step_num": 3,
         "ood_insert_step": 2,
-        "original_feedback": " You turn on the desklamp 1.",
+        "original_feedback": "You turn on the desklamp 1.",
         "ood_feedback": "You turn on the desklamp 1. Suddenly, the room fills with a warm, orange glow that casts long, dramatic shadows.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an irrelevant detail about the lighting in the room, which does not affect the task but may distract the agent."
@@ -488,7 +488,7 @@
         "oracle": "go to desk 1 > use desklamp 1 > take pencil 3 from desk 1",
         "full_step_num": 3,
         "ood_insert_step": 2,
-        "original_feedback": " You turn on the desklamp 1.",
+        "original_feedback": "You turn on the desklamp 1.",
         "ood_feedback": "You turn on the desklamp 1. The bulb flickers momentarily, casting strange shadows across the desk.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the abnormal phenomenon of flickering and casting strange shadows, which might confuse the agent into believing that there is some problem with the lamp or the environment, but it doesn't prevent the agent from examining the pencil."
@@ -501,7 +501,7 @@
         "oracle": "go to drawer 5 > take pencil 2 from drawer 5 > go to desk 1 > use desklamp 1",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at desk 1. On the desk 1, you see a bowl 2, a creditcard 2, a desklamp 1, a laptop 1, a mug 1, and a pen 2.",
+        "original_feedback": "You arrive at desk 1. On the desk 1, you see a bowl 2, a creditcard 2, a desklamp 1, a laptop 1, a mug 1, and a pen 2.",
         "ood_feedback": "You arrive at desk 1. On the desk 1, you see a bowl 2, a creditcard 2, a desklamp 1, a laptop 1, a mug 1, and a pen 2. The desklamp 1 appears to be flickering intermittently.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an irrelevant observation about the desklamp flickering, which could distract the agent from the task of using the lamp to examine the pencil, although this is not necessary for the task."
@@ -514,7 +514,7 @@
         "oracle": "go to desk 1 > use desklamp 1 > take cd 2 from desk 1",
         "full_step_num": 3,
         "ood_insert_step": 2,
-        "original_feedback": " You turn on the desklamp 1.",
+        "original_feedback": "You turn on the desklamp 1.",
         "ood_feedback": "You turn on the desklamp 1, the light reveals an ancient-looking map etched into the surface of desk 1.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the element of an 'ancient-looking map' on the desk, which is unexpected and irrelevant to the task of finding a CD, potentially distracting the agent."
@@ -527,7 +527,7 @@
         "oracle": "go to desk 2 > take bowl 1 from desk 2 > go to desk 1 > use desklamp 1",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at desk 1. On the desk 1, you see a desklamp 1, a keychain 3, a mug 2, a pen 2, a pen 1, and a pencil 2.",
+        "original_feedback": "You arrive at desk 1. On the desk 1, you see a desklamp 1, a keychain 3, a mug 2, a pen 2, a pen 1, and a pencil 2.",
         "ood_feedback": "You arrive at desk 1. On the desk 1, you see a desklamp 1, a keychain 3, a mug 2, a pen 2, a pen 1, and a pencil 2. The desklamp 1 appears to have a flickering bulb.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an irrelevant characteristic about the desklamp (flickering bulb), which could confuse the agent into thinking it needs to fix the bulb before examining the bowl, even though it does not interfere with the task."
@@ -540,7 +540,7 @@
         "oracle": "go to desk 2 > take mug 3 from desk 2 > go to desk 1 > use desklamp 1",
         "full_step_num": 4,
         "ood_insert_step": 3,
-        "original_feedback": " You arrive at desk 1. On the desk 1, you see a bowl 1, a desklamp 1, a laptop 1, and a pen 1.",
+        "original_feedback": "You arrive at desk 1. On the desk 1, you see a bowl 1, a desklamp 1, a laptop 1, and a pen 1.",
         "ood_feedback": "You arrive at desk 1. On the desk 1, you see a bowl 1, a desklamp 1, a laptop 1, and a pen 1. The desklamp 1 is currently turned off and not illuminating the desk.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces the irrelevant detail that the desklamp is turned off, which could mislead the agent into believing it must turn the lamp on before examining the mug, but doesn't prevent the agent from following the correct oracle."
@@ -553,7 +553,7 @@
         "oracle": "go to dresser 1 > take keychain 2 from dresser 1 > go to safe 1 > open safe 1 > move keychain 2 to safe 1 > go to dresser 1 > take keychain 1 from dresser 1 > go to safe 1 > move keychain 1 to safe 1",
         "full_step_num": 9,
         "ood_insert_step": 8,
-        "original_feedback": " You arrive at safe 1. The safe 1 is open. In it, you see a keychain 2, a statue 2, and a watch 3.",
+        "original_feedback": "You arrive at safe 1. The safe 1 is open. In it, you see a keychain 2, a statue 2, and a watch 3.",
         "ood_feedback": "You arrive at safe 1. The safe 1 is open. In it, you see a keychain 2, a statue 2, and a watch 3. The keychain 2 appears to be glowing unusually bright.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a misleading observation about the keychain 'glowing unusually bright', which is abnormal and could distract the agent from the task of moving the keychains to the safe."
@@ -566,7 +566,7 @@
         "oracle": "go to countertop 2 > take peppershaker 1 from countertop 2 > go to drawer 1 > open drawer 1 > move peppershaker 1 to drawer 1 > go to countertop 3 > take peppershaker 2 from countertop 3 > go to drawer 1 > move peppershaker 2 to drawer 1",
         "full_step_num": 9,
         "ood_insert_step": 8,
-        "original_feedback": " You arrive at drawer 1. The drawer 1 is open. In it, you see a peppershaker 1, and a spoon 1.",
+        "original_feedback": "You arrive at drawer 1. The drawer 1 is open. In it, you see a peppershaker 1, and a spoon 1.",
         "ood_feedback": "You arrive at drawer 1. The drawer 1 is open. In it, you see a peppershaker 1, and a spoon 1. Oddly, the peppershaker appears to be vibrating slightly.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an unusual and irrelevant observation that the peppershaker is vibrating, which could mislead the agent into considering this as a factor for the task, while it doesn't affect the task of moving the peppershaker to the drawer."
@@ -579,7 +579,7 @@
         "oracle": "go to toilet 1 > take soapbar 2 from toilet 1 > go to garbagecan 1 > move soapbar 2 to garbagecan 1 > go to toilet 1 > take soapbar 1 from toilet 1 > go to garbagecan 1 > move soapbar 1 to garbagecan 1",
         "full_step_num": 8,
         "ood_insert_step": 7,
-        "original_feedback": " You arrive at garbagecan 1. On the garbagecan 1, you see a soapbar 2.",
+        "original_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a soapbar 2.",
         "ood_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a soapbar 2. The soapbar 2 is extremely slippery.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces an irrelevant detail, the soapbar being 'extremely slippery', which could potentially mislead the agent into believing it might not be able to handle the soapbar and thus delay the task, even though it can still accomplish the task as per the oracle."
@@ -592,7 +592,7 @@
         "oracle": "go to desk 2 > take cd 2 from desk 2 > go to safe 1 > open safe 1 > move cd 2 to safe 1 > go to desk 2 > take cd 1 from desk 2 > go to safe 1 > move cd 1 to safe 1",
         "full_step_num": 9,
         "ood_insert_step": 8,
-        "original_feedback": " You arrive at safe 1. The safe 1 is open. In it, you see a cd 2, and a cellphone 1.",
+        "original_feedback": "You arrive at safe 1. The safe 1 is open. In it, you see a cd 2, and a cellphone 1.",
         "ood_feedback": "You arrive at safe 1. The safe 1 is open. In it, you see a cd 2, and a cellphone 1. The safe 1 is making a strange buzzing sound.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a confusing element, a buzzing sound from the safe, which might distract the agent and lead to unnecessary troubleshooting, though the task can still be completed by ignoring the sound."
@@ -605,7 +605,7 @@
         "oracle": "go to countertop 1 > take soapbar 4 from countertop 1 > go to garbagecan 1 > move soapbar 4 to garbagecan 1 > go to countertop 1 > take soapbar 3 from countertop 1 > go to garbagecan 1 > move soapbar 3 to garbagecan 1",
         "full_step_num": 8,
         "ood_insert_step": 7,
-        "original_feedback": " You arrive at garbagecan 1. On the garbagecan 1, you see a soapbar 4.",
+        "original_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a soapbar 4.",
         "ood_feedback": "You arrive at garbagecan 1. On the garbagecan 1, you see a soapbar 4. The soapbar 4 appears to be slightly used.",
         "ood_type": "task",
         "explanation": "The OOD feedback suggests the abnormality that the soapbar is 'slightly used', which may mislead the agent into thinking it should not be thrown away, but it does not change the task of moving the soapbar to the garbagecan."
@@ -618,7 +618,7 @@
         "oracle": "go to drawer 5 > take cd 3 from drawer 5 > go to safe 1 > open safe 1 > move cd 3 to safe 1 > go to desk 2 > take cd 2 from desk 2 > go to safe 1 > move cd 2 to safe 1",
         "full_step_num": 9,
         "ood_insert_step": 8,
-        "original_feedback": " You arrive at safe 1. The safe 1 is open. In it, you see a cd 3, and a cellphone 2.",
+        "original_feedback": "You arrive at safe 1. The safe 1 is open. In it, you see a cd 3, and a cellphone 2.",
         "ood_feedback": "You arrive at safe 1. The safe 1 is open. In it, you see a cd 3, a cellphone 2, and an unexpected photo of unknown person.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a photo of an unknown person in the safe, which is not related to the task of moving cds, and could distract the agent by introducing an irrelevant item."
@@ -631,7 +631,7 @@
         "oracle": "go to sidetable 1 > take keychain 1 from sidetable 1 > go to safe 1 > open safe 1 > move keychain 1 to safe 1 > go to sofa 1 > take keychain 2 from sofa 1 > go to safe 1 > move keychain 2 to safe 1",
         "full_step_num": 9,
         "ood_insert_step": 8,
-        "original_feedback": " You arrive at safe 1. The safe 1 is open. In it, you see a keychain 1, a watch 3, and a watch 2.",
+        "original_feedback": "You arrive at safe 1. The safe 1 is open. In it, you see a keychain 1, a watch 3, and a watch 2.",
         "ood_feedback": "You arrive at safe 1. The safe 1 is open. In it, you see a keychain 1, a watch 3, and a watch 2. The keychain 1 appears to be glowing in the dark.",
         "ood_type": "task",
         "explanation": "The OOD feedback introduces a confusing element by stating the keychain is 'glowing in the dark,' which is irrelevant to the task of putting it in the safe, yet might distract the agent into considering unnecessary actions."
@@ -644,7 +644,7 @@
         "oracle": "go to countertop 2 > take peppershaker 3 from countertop 2 > go to drawer 1 > open drawer 1 > move peppershaker 3 to drawer 1 > go to cabinet 1 > take peppershaker 2 from cabinet 1 > go to drawer 1 > move peppershaker 2 to drawer 1",
         "full_step_num": 9,
         "ood_insert_step": 8,
-        "original_feedback": " You arrive at drawer 1. The drawer 1 is open. In it, you see a cellphone 1, a fork 1, and a peppershaker 3.",
+        "original_feedback": "You arrive at drawer 1. The drawer 1 is open. In it, you see a cellphone 1, a fork 1, and a peppershaker 3.",
         "ood_feedback": "You arrive at drawer 1. The drawer 1 is open. In it, you see a cellphone 1, a fork 1, and a peppershaker 3. The peppershaker 3 is vibrating slightly.",
         "ood_type": "task",
         "explanation": "The OOD feedback subtly introduces an abnormal condition (the peppershaker vibrating) that could confuse the agent, but the task of moving the peppershaker to the drawer is still feasible."
