@@ -131,19 +131,25 @@ class AlfworldEnv:
                 self.infeasible_message_received = True
             elif OOD_ACTION in action:
                 ood_detected = True
+                terminated = True  # 如果在ID环境中，LLM agent输出了OOD action，则终止episode
             else:
                 self.last_action_error = (
                     f"Action {action} is not valid. It's not in the admissible commands!"
                 )
-                obs = self._get_obs()
+                info["action_exec_stop"] = time.time()
+                self.obs = self._get_obs()
+                logger.debug(f"Action is not valid.")
+                self._wait_for_user_message()
+                logger.debug(f"User message done")
+
+                info["task_info"] = self.task_info
                 terminated = False
-                truncated = self.step_count >= self.max_step
                 return (
-                    obs,
+                    self.obs,
                     0,
                     terminated,
                     truncated,
-                    None,
+                    info,
                     ood_detected,
                 )  # is it right to return None as info?
         # action is promised to be in the admissible commands
@@ -166,7 +172,7 @@ class AlfworldEnv:
         logger.debug(f"User message done")
 
         info["task_info"] = task_info
-        obs = self._get_obs()
+        self.obs = self._get_obs()
         # terminate the episode if the agent is infeasible or the episode is done or ood is detected
         terminated = (
             done
@@ -174,7 +180,10 @@ class AlfworldEnv:
             or ood_detected
         )  # task or agent can terminate the episode
         truncated = self.step_count >= self.max_step
-        return obs, reward, terminated, truncated, info, ood_detected
+        return self.obs, reward, terminated, truncated, info, ood_detected
+
+    def close(self):
+        pass
 
     def _get_obs(self):
         obs = {
