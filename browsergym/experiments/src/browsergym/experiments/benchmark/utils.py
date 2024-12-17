@@ -114,7 +114,7 @@ def prepare_backend(backend: str):
             from browsergym.webarena.instance import WebArenaInstance
 
             default_instance = WebArenaInstance()
-            default_instance.full_reset()
+            # default_instance.full_reset()
 
             massage_tasks(
                 [
