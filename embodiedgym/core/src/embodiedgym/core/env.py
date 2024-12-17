@@ -131,6 +131,7 @@ class AlfworldEnv:
                 self.infeasible_message_received = True
             elif OOD_ACTION in action:
                 ood_detected = True
+                terminated = False
                 truncated = True  # 如果在ID环境中，LLM agent输出了OOD action，则终止episode
             else:
                 self.environment_description = f"Nothing happened. Your action {action} is not valid. It's not in the admissible commands!"
@@ -146,14 +147,14 @@ class AlfworldEnv:
                 info["task_info"] = self.task_info
                 terminated = False
                 truncated = self.step_count >= self.max_step
-                return (
-                    self.obs,
-                    0,
-                    terminated,
-                    truncated,
-                    info,
-                    ood_detected,
-                )  # is it right to return None as info?
+            return (
+                self.obs,
+                0,
+                terminated,
+                truncated,
+                info,
+                ood_detected,
+            )  # is it right to return None as info?
         # action is promised to be in the admissible commands
         # it's designed in agents _parse_answer() function
         observation, reward, done, task_info = self.env.step([action])
