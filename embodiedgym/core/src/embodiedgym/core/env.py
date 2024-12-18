@@ -37,7 +37,7 @@ class AlfworldEnv:
         self.task_name = task_name
         self.max_step = max_step
         self.step_count = 0
-        self.chat: Chat = None
+        # self.chat: Chat = None
 
         current_dir = os.path.dirname(__file__)
         config_path = os.path.join(current_dir, "configs", "base_config.yaml")
@@ -53,11 +53,11 @@ class AlfworldEnv:
     def reset(self):
         # create a new chat, this is not only for recording actions from the agent
         # but also could be shown on the screen as a chatbox using the Chromium browser
-        self.chat = Chat(
-            headless=False,
-            chat_size=(500, 800),
-            record_video_dir=None,
-        )
+        # self.chat = Chat(
+        #     headless=False,
+        #     chat_size=(500, 800),
+        #     record_video_dir=None,
+        # )
 
         # obs: Text observations, i.e. command's feedback.
         # infos: Information requested when creating the environments.
@@ -80,25 +80,25 @@ class AlfworldEnv:
                 f"task_goal should be of type str or list, got {self.goal_object.__class__}"
             )
 
-        self.chat.add_message(
-            role="assistant",
-            msg="Hi! I am your househould assistant, I can perform household tasks for you. What can I help you with?",
-        )
+        # self.chat.add_message(
+        #     role="assistant",
+        #     msg="Hi! I am your househould assistant, I can perform household tasks for you. What can I help you with?",
+        # )
 
         # send task goal (if any) to the chat
-        for message in self.goal_object:
-            match message["type"]:
-                case "text":
-                    self.chat.add_message(role="user", msg=message["text"])
-                case "image_url":
-                    image_src = message["image_url"]
-                    if isinstance(image_src, dict):
-                        image_src = image_src["url"]
-                    self.chat.add_message(role="user_image", msg=image_src)
-                case _:
-                    raise ValueError(
-                        f"Unknown message type {repr(message['type'])} in the task goal."
-                    )
+        # for message in self.goal_object:
+        #     match message["type"]:
+        #         case "text":
+        #             self.chat.add_message(role="user", msg=message["text"])
+        #         case "image_url":
+        #             image_src = message["image_url"]
+        #             if isinstance(image_src, dict):
+        #                 image_src = image_src["url"]
+        #             self.chat.add_message(role="user_image", msg=image_src)
+        #         case _:
+        #             raise ValueError(
+        #                 f"Unknown message type {repr(message['type'])} in the task goal."
+        #             )
 
         # init start time
         self.start_time = time.time()
@@ -109,7 +109,7 @@ class AlfworldEnv:
         self.infeasible_message_received = False
 
         # wait for a user message to continue if it's configured to wait for a user message
-        self._wait_for_user_message()
+        # self._wait_for_user_message()
 
         self.obs = self._get_obs()
 
@@ -138,15 +138,16 @@ class AlfworldEnv:
                 self.last_action_error = (
                     f"Action {action} is not valid. It's not in the admissible commands!"
                 )
-                info["action_exec_stop"] = time.time()
+
                 self.obs = self._get_obs()
                 logger.debug(f"Action is not valid.")
-                self._wait_for_user_message()
-                logger.debug(f"User message done")
+                # self._wait_for_user_message()
+                # logger.debug(f"User message done")
 
-                info["task_info"] = self.task_info
                 terminated = False
                 truncated = self.step_count >= self.max_step
+            info["action_exec_stop"] = time.time()
+            info["task_info"] = self.task_info
             return (
                 self.obs,
                 0,
@@ -171,7 +172,7 @@ class AlfworldEnv:
         logger.debug(f"Action executed")
         info["action_exec_stop"] = time.time()
 
-        self._wait_for_user_message()
+        # self._wait_for_user_message()
         logger.debug(f"User message done")
 
         info["task_info"] = task_info
@@ -190,7 +191,8 @@ class AlfworldEnv:
 
     def _get_obs(self):
         obs = {
-            "chat_messages": tuple(copy.deepcopy(self.chat.messages)),
+            # "chat_messages": tuple(copy.deepcopy(self.chat.messages)),
+            "chat_messages": [],
             "goal_object": tuple(copy.deepcopy(self.goal_object)),
             "environment_description": self.environment_description,
             "admissible_commands": self.admissible_commands,
@@ -225,7 +227,7 @@ class OODAlfworldEnv(AlfworldEnv):
     def reset(self, id_env: AlfworldEnv):
         self.id_env = id_env
         assert self.task_name == self.id_env.task_name
-        assert self.original_feedback == self.id_env.environment_description
+        assert self.original_feedback.strip() == self.id_env.environment_description.strip()
         self.obs = self.id_env._get_obs()
         self.obs["environment_description"] = self.ood_feedback
 
