@@ -7,8 +7,6 @@ import os
 # Set your OpenAI API key
 client = OpenAI()
 
-# openai.api_key = "sk-wjyStn1bNsuT8NqW706cA19d557a4519Af272cD23039A88f"
-# openai.base_url = "https://api.shubiaobiao.cn/v1/"
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
@@ -103,7 +101,7 @@ def generate_ood_with_gpt(description, original_feedback, task, oracle):
     - OOD Feedback: "You arrive at the countertop. On the countertop, you see an apple 1 slowly melting like ice."
     - Explanation: The semantic OOD feedback breaks world realism by making the apple "melt," which is physically impossible, confusing the agent about the apple's state.
 
-    ### Return the response in the following JSON format ):
+    ### Return the response in the following JSON format):
     {{
         "ood_feedback": "Your generated OOD feedback here",
         "explanation": "Your explanation here"
